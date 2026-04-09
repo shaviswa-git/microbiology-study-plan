@@ -3,676 +3,488 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Command Center — Micro · Pharma · Patho</title>
+<title>Study Replan — Apr 9–21</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f5f6fa;--card:#ffffff;--card-hover:#f0f1f5;
-  --border:#e0e2ea;--text:#1e1f26;--text-dim:#6b7084;
+  --bg:#f5f6fa;--card:#fff;--border:#e0e2ea;--text:#1e1f26;--text-dim:#6b7084;
   --accent:#059669;--accent-dim:#d1fae5;
   --micro:#059669;--pharma:#6366f1;--patho:#e11d48;
-  --parasitic:#db2777;--gi:#ea580c;--hepato:#7c3aed;--skin:#0284c7;--cns-m:#ca8a04;
-  --cns-p:#9333ea;--autacoids:#c2410c;--git-p:#047857;--resp:#0891b2;--endo:#be123c;
-  --p-immuno:#8b5cf6;--p-env:#d97706;--p-infect:#dc2626;--p-genetics:#2563eb;
-  --p-paeds:#ec4899;--p-git:#f59e0b;--p-hepato:#7c3aed;--p-cvs:#ef4444;--p-rs:#0ea5e9;
-  --done:#d1fae5;--done-text:#059669;
-  --holiday:#fef3c7;--holiday-border:#fbbf24;
+  --rev-micro:#86efac;--rev-pharma:#a5b4fc;--rev-patho:#fda4af;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.container{max-width:1260px;margin:0 auto;padding:0 1.5rem}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem 2rem}
 header{padding:2rem 0 1rem}
-header h1{font-family:'Fraunces',serif;font-weight:900;font-size:2rem;background:linear-gradient(135deg,var(--micro),var(--pharma),var(--patho));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:var(--text-dim);margin-top:.3rem;font-size:.88rem}
-.tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--card);border-radius:12px;padding:.25rem;border:1px solid var(--border);flex-wrap:wrap}
-.tab-btn{flex:1;min-width:100px;padding:.65rem .8rem;border:none;background:transparent;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;border-radius:10px;transition:all .25s}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active-micro{background:rgba(5,150,105,.1);color:var(--micro)}
-.tab-btn.active-pharma{background:rgba(99,102,241,.1);color:var(--pharma)}
-.tab-btn.active-patho{background:rgba(225,29,72,.1);color:var(--patho)}
-.tab-btn.active-dash{background:linear-gradient(135deg,rgba(5,150,105,.06),rgba(99,102,241,.06),rgba(225,29,72,.06));color:var(--text)}
-.tab-content{display:none}.tab-content.active{display:block;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.stats-bar{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.6rem .9rem;flex:1;min-width:105px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.stat .label{font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);margin-bottom:.1rem}
-.stat .value{font-family:'Fraunces',serif;font-weight:700;font-size:1.2rem}
-.stat .value.micro-accent{color:var(--micro)}.stat .value.pharma-accent{color:var(--pharma)}.stat .value.patho-accent{color:var(--patho)}
-.progress-wrap{margin-bottom:1rem}
+header h1{font-family:'Fraunces',serif;font-weight:900;font-size:1.8rem;background:linear-gradient(135deg,var(--micro),var(--pharma),var(--patho));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header p{color:var(--text-dim);margin-top:.3rem;font-size:.85rem}
+.summary{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.04);position:relative;overflow:hidden}
+.summary::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--micro),var(--pharma),var(--patho))}
+.summary h3{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:.6rem}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.sum-card{padding:.6rem;border-radius:8px;border:1px solid var(--border)}
+.sum-card h4{font-size:.78rem;margin-bottom:.3rem}
+.sum-card .sc-row{display:flex;justify-content:space-between;font-size:.72rem;padding:.15rem 0;color:var(--text-dim)}
+.sum-card .sc-row .scv{font-weight:700;color:var(--text)}
+.sum-card.mc{border-left:3px solid var(--micro)}.sum-card.mc h4{color:var(--micro)}
+.sum-card.pc{border-left:3px solid var(--pharma)}.sum-card.pc h4{color:var(--pharma)}
+.sum-card.tc{border-left:3px solid var(--patho)}.sum-card.tc h4{color:var(--patho)}
+.avail-bar{display:flex;gap:.15rem;height:10px;border-radius:5px;overflow:hidden;margin-top:.4rem}
+.avail-bar div{border-radius:3px;transition:width .3s}
+
+.progress-wrap{margin-bottom:1.2rem}
 .progress-bar{height:5px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
-.progress-fill.micro{background:linear-gradient(90deg,var(--micro),#38bdf8)}
-.progress-fill.pharma{background:linear-gradient(90deg,var(--pharma),#c084fc)}
-.progress-fill.patho{background:linear-gradient(90deg,var(--patho),#f472b6)}
-.legend{display:flex;gap:.45rem;margin-bottom:.6rem;flex-wrap:wrap}
-.legend-item{display:flex;align-items:center;gap:.25rem;font-size:.68rem;color:var(--text-dim)}
-.legend-dot{width:8px;height:8px;border-radius:3px}
-.controls{display:flex;gap:.35rem;margin-bottom:.8rem;flex-wrap:wrap}
-.controls button{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:.35rem .65rem;border-radius:7px;cursor:pointer;font-size:.72rem;font-family:'DM Sans',sans-serif;transition:all .2s}
-.controls button:hover,.controls button.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
-.controls.pharma-controls button:hover,.controls.pharma-controls button.active{border-color:var(--pharma);color:var(--pharma);background:rgba(99,102,241,.08)}
-.controls.patho-controls button:hover,.controls.patho-controls button.active{border-color:var(--patho);color:var(--patho);background:rgba(225,29,72,.08)}
-.calendar{margin-bottom:1.2rem}
-.week{display:grid;grid-template-columns:65px 1fr;gap:0;margin-bottom:.35rem}
-.week-label{font-family:'Fraunces',serif;font-weight:600;font-size:.72rem;color:var(--text-dim);padding-top:.85rem;text-align:right;padding-right:.7rem}
-.week-days{display:grid;grid-template-columns:repeat(7,1fr);gap:.3rem}
-.day-hdr{text-align:center;font-size:.6rem;color:var(--text-dim);padding:.2rem 0;text-transform:uppercase;letter-spacing:.06em}
-.day-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:.5rem;min-height:100px;cursor:pointer;transition:all .25s ease;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.day-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.07)}
-.day-card.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.day-card.holiday-day{background:var(--holiday);border-color:var(--holiday-border)}
-.day-card.completed{opacity:.6}
-.day-card.completed::after{content:'✓';position:absolute;top:.35rem;right:.4rem;font-weight:700;font-size:.75rem;color:var(--accent)}
-.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem}
-.day-num{font-weight:700;font-size:.78rem}
-.day-name{font-size:.58rem;color:var(--text-dim);text-transform:uppercase}
-.day-type{font-size:.52rem;padding:.08rem .25rem;border-radius:3px;font-weight:600}
-.day-type.holiday{background:#fef3c7;color:#92400e}
-.day-type.sunday{background:#ede9fe;color:#6d28d9}
-.day-hrs{font-size:.58rem;font-weight:600;color:var(--text-dim)}
-.subject-block{margin-bottom:.3rem;padding:.2rem .35rem;border-radius:5px;border-left:2px solid}
-.subject-block.sb-micro{border-color:var(--micro);background:rgba(5,150,105,.04)}
-.subject-block.sb-pharma{border-color:var(--pharma);background:rgba(99,102,241,.04)}
-.subject-block.sb-patho{border-color:var(--patho);background:rgba(225,29,72,.04)}
-.subject-block .sb-label{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.15rem}
-.subject-block.sb-micro .sb-label{color:var(--micro)}
-.subject-block.sb-pharma .sb-label{color:var(--pharma)}
-.subject-block.sb-patho .sb-label{color:var(--patho)}
-.ch-pill{font-size:.58rem;line-height:1.25;color:var(--text-dim)}
-.ch-pill .eff{font-weight:700;font-size:.55rem;padding:.02rem .18rem;border-radius:2px;background:rgba(0,0,0,.06);margin-right:.2rem}
-.day-empty{background:transparent;border:1px dashed var(--border);border-radius:9px;min-height:100px;opacity:.3}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s;background:linear-gradient(90deg,var(--micro),var(--pharma),var(--patho))}
+
+/* Day cards */
+.day-grid{display:grid;gap:.8rem}
+.day-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;box-shadow:0 1px 2px rgba(0,0,0,.03);cursor:pointer;transition:all .2s;position:relative}
+.day-row:hover{box-shadow:0 4px 12px rgba(0,0,0,.07);transform:translateY(-1px)}
+.day-row.completed{opacity:.6}
+.day-row.completed::after{content:'✓ Done';position:absolute;top:.8rem;right:1rem;font-size:.7rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:.15rem .5rem;border-radius:4px}
+.day-row.is-today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.day-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.day-hdr .dh-left{display:flex;align-items:center;gap:.5rem}
+.day-hdr .day-date{font-family:'Fraunces',serif;font-weight:700;font-size:1rem}
+.day-hdr .day-dow{font-size:.7rem;color:var(--text-dim);text-transform:uppercase}
+.day-hdr .day-total{font-size:.8rem;font-weight:700;color:var(--text-dim)}
+.day-blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem}
+.block{padding:.5rem .7rem;border-radius:8px;border-left:3px solid}
+.block.b-micro{border-color:var(--micro);background:rgba(5,150,105,.04)}
+.block.b-pharma{border-color:var(--pharma);background:rgba(99,102,241,.04)}
+.block.b-patho{border-color:var(--patho);background:rgba(225,29,72,.04)}
+.block.b-rev-micro{border-color:var(--rev-micro);background:rgba(134,239,172,.08)}
+.block.b-rev-pharma{border-color:var(--rev-pharma);background:rgba(165,180,252,.08)}
+.block.b-rev-patho{border-color:var(--rev-patho);background:rgba(253,164,175,.08)}
+.block .bl-hdr{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
+.block.b-micro .bl-hdr{color:var(--micro)}
+.block.b-pharma .bl-hdr{color:var(--pharma)}
+.block.b-patho .bl-hdr{color:var(--patho)}
+.block.b-rev-micro .bl-hdr{color:#16a34a}
+.block.b-rev-pharma .bl-hdr{color:#818cf8}
+.block.b-rev-patho .bl-hdr{color:#fb7185}
+.block .bl-items{font-size:.72rem;color:var(--text-dim);line-height:1.5}
+.block .bl-items .ch{margin-bottom:.15rem}
+.block .bl-items .ch .hrs{font-weight:600;color:var(--text)}
+
 /* Modal */
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:520px;width:92%;max-height:80vh;overflow-y:auto;animation:slideUp .3s ease;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:500px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:slideUp .3s}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;margin-bottom:.2rem}
-.modal .modal-date{color:var(--text-dim);font-size:.8rem;margin-bottom:.7rem}
-.modal .m-subject{padding:.6rem;border-radius:8px;margin-bottom:.5rem;border:1px solid var(--border)}
-.modal .m-subject h4{font-size:.85rem;margin-bottom:.3rem}
-.modal .m-subject .m-ch{font-size:.78rem;color:var(--text-dim);padding:.2rem 0;border-bottom:1px solid rgba(0,0,0,.04)}
-.modal .m-subject .m-ch:last-child{border-bottom:none}
-.modal .m-subject .m-ch .tag{font-size:.6rem;padding:.1rem .3rem;border-radius:3px;background:rgba(0,0,0,.05);color:var(--text-dim);margin-left:.3rem}
-.modal-actions{display:flex;gap:.4rem;margin-top:.7rem;flex-wrap:wrap}
-.modal-btn{border:none;padding:.4rem .9rem;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.8rem;transition:all .2s}
-.modal-btn.close{background:rgba(0,0,0,.06);color:var(--text-dim)}
+.modal h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;margin-bottom:.6rem}
+.modal-actions{display:flex;gap:.4rem;margin-top:.8rem}
+.modal-btn{border:none;padding:.45rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;transition:all .2s}
 .modal-btn.toggle{background:var(--accent-dim);color:var(--accent)}
 .modal-btn.toggle:hover{background:var(--accent);color:#fff}
 .modal-btn.undo{background:rgba(225,29,72,.1);color:var(--patho)}
-.modal-btn.undo:hover{background:rgba(225,29,72,.2)}
-/* Dashboard */
-.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:1.2rem}
-.dash-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.dash-card.micro-card::before{background:var(--micro)}
-.dash-card.pharma-card::before{background:var(--pharma)}
-.dash-card.patho-card::before{background:var(--patho)}
-.dash-card h3{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:.6rem}
-.dash-card .ds{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.78rem}
-.dash-card .ds:last-child{border-bottom:none}
-.dash-card .ds .dsl{color:var(--text-dim)}.dash-card .ds .dsv{font-weight:700}
-.combined-stats{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.2rem;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.combined-stats::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--micro),var(--pharma),var(--patho))}
-.combined-stats h3{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:.5rem}
-.dp{display:flex;gap:.4rem;align-items:center;margin-bottom:.4rem}
-.dp .dpl{font-size:.72rem;color:var(--text-dim);width:85px;flex-shrink:0}
-.dp .dpb{flex:1;height:7px;background:rgba(0,0,0,.06);border-radius:4px;overflow:hidden}
-.dp .dpf{height:100%;border-radius:4px;transition:width .5s}
-.dp .dpp{font-size:.72rem;font-weight:600;width:35px;text-align:right}
-.daily-overview{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.2rem;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.daily-overview h3{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:.6rem}
-.dr{display:flex;align-items:center;gap:.4rem;padding:.3rem 0;border-bottom:1px solid rgba(0,0,0,.03)}
-.dr:last-child{border-bottom:none}
-.dr .drd{font-size:.7rem;width:80px;flex-shrink:0;color:var(--text-dim)}
-.dr .drb{font-size:.52rem;width:38px;flex-shrink:0;text-align:center}
-.dr .drb span{padding:.08rem .25rem;border-radius:3px;font-weight:600}
-.dr .drb .hol{background:#fef3c7;color:#92400e}.dr .drb .sun{background:#ede9fe;color:#6d28d9}
-.dr .drbars{flex:1;display:flex;gap:2px;height:16px;align-items:center}
-.dr .bar{height:100%;border-radius:3px;transition:all .3s}
-.dr .bar.mb{background:var(--micro)}.dr .bar.pb{background:var(--pharma)}.dr .bar.tb{background:var(--patho)}
-.dr .bar.done{opacity:1}.dr .bar.undone{opacity:.18}
-.dr .drh{font-size:.65rem;width:40px;text-align:right;color:var(--text-dim)}
-.dr.is-today{background:rgba(5,150,105,.05);border-radius:5px;padding:.3rem .4rem}
-.footer-note{font-size:.72rem;color:var(--text-dim);line-height:1.45;margin-bottom:2rem}
+.modal-btn.close{background:rgba(0,0,0,.06);color:var(--text-dim)}
+
+.legend{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.legend-item{display:flex;align-items:center;gap:.25rem;font-size:.68rem;color:var(--text-dim)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+
+.footer-note{font-size:.72rem;color:var(--text-dim);line-height:1.45;margin-top:1rem}
 .footer-note strong{color:var(--text)}
-@media(max-width:1000px){.week{grid-template-columns:1fr}.week-label{text-align:left;padding:0 0 .2rem 0}.week-days{grid-template-columns:repeat(4,1fr)}header h1{font-size:1.5rem}.dash-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.week-days{grid-template-columns:repeat(2,1fr)}.stats-bar{flex-direction:column}.tabs{flex-direction:column}}
+
+@media(max-width:700px){.sum-grid{grid-template-columns:1fr}.day-blocks{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="container">
 <header>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem">
-    <div>
-      <h1>Study Command Center</h1>
-      <p>Mar 26 – Apr 20, 2026 · Microbiology · Pharmacology · Pathology · Starting today (4h)</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:.5rem;margin-top:.3rem">
-      <div id="syncBadge" style="font-size:.72rem;cursor:pointer" onclick="showTokenPrompt()"></div>
-      <button onclick="showTokenPrompt()" style="font-size:.68rem;padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text-dim);cursor:pointer;font-family:'DM Sans',sans-serif">⚙ Sync</button>
-    </div>
-  </div>
+  <h1>Replan: Apr 9 – 21</h1>
+  <p>Remaining chapters + Revision of completed content · 102 hours available</p>
 </header>
-<div class="tabs">
-  <button class="tab-btn active-dash" data-tab="dashboard" id="tabDash">◉ Dashboard</button>
-  <button class="tab-btn" data-tab="micro" id="tabMicro">🦠 Micro</button>
-  <button class="tab-btn" data-tab="pharma" id="tabPharma">💊 Pharma</button>
-  <button class="tab-btn" data-tab="patho" id="tabPatho">🔬 Patho</button>
-</div>
-<div class="tab-content active" id="content-dashboard"></div>
-<div class="tab-content" id="content-micro"></div>
-<div class="tab-content" id="content-pharma"></div>
-<div class="tab-content" id="content-patho"></div>
-</div>
-<div class="modal-overlay" id="tokenOverlay" style="display:none">
-  <div class="modal" style="max-width:420px">
-    <h3>GitHub Sync Setup</h3>
-    <div class="modal-date">Enter your GitHub Personal Access Token (classic) with <code>gist</code> scope to sync progress across devices.</div>
-    <div style="margin:.8rem 0">
-      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:.5rem .7rem;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;background:var(--bg);color:var(--text)">
-    </div>
-    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:.8rem">Token is stored only in your browser's localStorage. It never leaves your device except to authenticate with GitHub's API directly.</div>
-    <div style="display:flex;gap:.4rem">
-      <button class="modal-btn toggle" id="tokenSave">Connect & Sync</button>
-      <button class="modal-btn close" id="tokenSkip">Skip</button>
-    </div>
-  </div>
-</div>
+
+<div id="app"></div>
+
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modal">
-    <h3 id="modalTitle"></h3>
-    <div class="modal-date" id="modalDate"></div>
-    <div id="modalBody"></div>
-    <div class="modal-actions" id="modalActions"></div>
-  </div>
+  <div class="modal" id="modal"></div>
 </div>
+</div>
+
 <script>
-// ===== DATA =====
-const MICRO_TOPICS={parasitic:"Parasitic CVS",gi:"GI Infections",hepato:"Hepatobiliary",skin:"Skin & Soft Tissue",cns_m:"CNS Infections"};
-const PHARMA_TOPICS={cns_p:"CNS",autacoids:"Autacoids",git_p:"GIT",resp:"Respiratory",endo:"Endocrine"};
-const PATHO_TOPICS={p_immuno:"Immunology",p_env:"Environ & Nutrition",p_infect:"Infections",p_genetics:"Genetics",p_paeds:"Paediatric",p_git:"GIT",p_hepato:"Hepatobiliary",p_cvs:"CVS",p_rs:"Respiratory"};
-
-const microCh=[
-  {id:1,n:"Malaria and Babesiosis",t:"parasitic",e:"M",h:2.25},
-  {id:2,n:"Visceral Leishmaniasis & Trypanosomiasis",t:"parasitic",e:"S",h:1.25},
-  {id:3,n:"Lymphatic Filariasis",t:"parasitic",e:"S",h:1.25},
-  {id:4,n:"GI Infective Syndromes",t:"gi",e:"S",h:1.25},
-  {id:5,n:"Food Poisoning: S. aureus, B. cereus, C. botulinum",t:"gi",e:"S",h:1.25},
-  {id:6,n:"GI Enterobacteriaceae: E. coli, Shigella, Salmonella",t:"gi",e:"M",h:2.25},
-  {id:7,n:"Cholera, Vibrio and Aeromonas",t:"gi",e:"M",h:2.25},
-  {id:8,n:"Misc Bacterial GI: H. pylori, Campylobacter, C. diff",t:"gi",e:"S",h:1.25},
-  {id:9,n:"Viral Gastroenteritis: Rotavirus & Others",t:"gi",e:"S",h:1.25},
-  {id:10,n:"Intestinal Protozoa: Amoebiasis, Giardiasis, Coccidia",t:"gi",e:"L",h:3},
-  {id:11,n:"Intestinal Helminthic Infections",t:"gi",e:"XL",h:5},
-  {id:12,n:"Infective Syndromes of Hepatobiliary System",t:"hepato",e:"S",h:1.25},
-  {id:13,n:"Hepatitis Viruses, Yellow Fever & Others",t:"hepato",e:"L",h:3},
-  {id:14,n:"Parasitic: Amoebic Liver Abscess, Hydatid, Trematodes",t:"hepato",e:"L",h:3},
-  {id:50,n:"Infective Syndromes of Skin, Soft Tissue & MSK",t:"skin",e:"M",h:2.25},
-  {id:51,n:"Staphylococcal Infections",t:"skin",e:"S",h:1.25},
-  {id:52,n:"Beta-hemolytic Streptococcal Infections",t:"skin",e:"S",h:1.25},
-  {id:53,n:"Gas Gangrene & Nonsporing Infections",t:"skin",e:"L",h:3},
-  {id:54,n:"Leprosy (M. leprae)",t:"skin",e:"S",h:1.25},
-  {id:55,n:"Misc Bacterial: Anthrax, Actinomycosis, Nocardiosis",t:"skin",e:"XL",h:5},
-  {id:56,n:"Viral Exanthems: HSV, VZV, Pox, Measles, Rubella",t:"skin",e:"L",h:3},
-  {id:57,n:"Parasitic: Cutaneous Leish, Cysticercosis, Nematodes",t:"skin",e:"M",h:2.25},
-  {id:58,n:"Fungal: Superficial, Subcutaneous, Candidiasis",t:"skin",e:"M",h:2.25},
-  {id:70,n:"Infective Syndromes of CNS",t:"cns_m",e:"S",h:1.25},
-  {id:71,n:"Bacterial Meningitis",t:"cns_m",e:"M",h:2.25},
-  {id:72,n:"Tetanus",t:"cns_m",e:"S",h:1.25},
-  {id:73,n:"Viral Meningitis & Myelitis: Polio, Coxsackie",t:"cns_m",e:"M",h:2.25},
-  {id:74,n:"Viral Encephalitis and Encephalopathy",t:"cns_m",e:"L",h:3},
-  {id:75,n:"Parasitic & Fungal Infections of CNS",t:"cns_m",e:"L",h:3},
+// ===== REMAINING NEW CONTENT =====
+const newMicro=[
+  {id:55,n:"Misc Bacterial: Anthrax, Actinomycosis, Nocardiosis",e:"XL",h:5},
+  {id:56,n:"Viral Exanthems: HSV, VZV, Pox, Measles, Rubella",e:"L",h:3},
+  {id:57,n:"Parasitic: Cutaneous Leish, Cysticercosis, Nematodes",e:"M",h:2.25},
+  {id:58,n:"Fungal: Superficial, Subcutaneous, Candidiasis",e:"M",h:2.25},
+  {id:70,n:"Infective Syndromes of CNS",e:"S",h:1.25},
+  {id:71,n:"Bacterial Meningitis",e:"M",h:2.25},
+  {id:72,n:"Tetanus",e:"S",h:1.25},
+  {id:73,n:"Viral Meningitis & Myelitis: Polio, Coxsackie",e:"M",h:2.25},
+  {id:74,n:"Viral Encephalitis and Encephalopathy",e:"L",h:3},
+  {id:75,n:"Parasitic & Fungal Infections of CNS",e:"L",h:3},
 ];
-const pharmaCh=[
-  {id:28,n:"General Anaesthetics",t:"cns_p",e:"L",h:3},
-  {id:29,n:"Sedative-Hypnotics",t:"cns_p",e:"M",h:2.25},
-  {id:30,n:"Antiepileptic Drugs",t:"cns_p",e:"L",h:3},
-  {id:31,n:"Drugs for Parkinsonism & Alzheimer's",t:"cns_p",e:"M",h:2.25},
-  {id:32,n:"Antipsychotic and Antimanic Drugs",t:"cns_p",e:"L",h:3},
-  {id:33,n:"Antidepressant and Antianxiety Drugs",t:"cns_p",e:"L",h:3},
-  {id:34,n:"Opioid Analgesics and Antagonists",t:"cns_p",e:"L",h:3},
-  {id:35,n:"CNS Stimulants & Cognition Enhancers",t:"cns_p",e:"S",h:1.25},
-  {id:111,n:"Histamine and Antihistaminics",t:"autacoids",e:"S",h:1.25},
-  {id:112,n:"5-HT, Antagonists & Migraine Therapy",t:"autacoids",e:"M",h:2.25},
-  {id:113,n:"Prostaglandins, Leukotrienes & PAF",t:"autacoids",e:"S",h:1.25},
-  {id:114,n:"NSAIDs and Antipyretic-Analgesics",t:"autacoids",e:"L",h:3},
-  {id:115,n:"Antirheumatoid and Antigout Drugs",t:"autacoids",e:"S",h:1.25},
-  {id:47,n:"Drugs for Peptic Ulcer and GERD",t:"git_p",e:"M",h:2.25},
-  {id:48,n:"Antiemetic, Prokinetic & Digestant Drugs",t:"git_p",e:"M",h:2.25},
-  {id:49,n:"Drugs for Constipation and Diarrhoea",t:"git_p",e:"L",h:3},
-  {id:16,n:"Drugs for Cough and Bronchial Asthma",t:"resp",e:"L",h:3},
-  {id:101,n:"Anterior Pituitary Drugs",t:"endo",e:"S",h:1.25},
-  {id:102,n:"Thyroid and Anti-thyroid Drugs",t:"endo",e:"M",h:2.25},
-  {id:103,n:"Insulin & Oral Hypoglycaemic Agents",t:"endo",e:"XL",h:5},
-  {id:104,n:"Corticosteroids",t:"endo",e:"L",h:3},
+const newPharma=[
+  {id:16,n:"Drugs for Cough and Bronchial Asthma",e:"L",h:3},
+  {id:101,n:"Anterior Pituitary Drugs",e:"S",h:1.25},
+  {id:102,n:"Thyroid and Anti-thyroid Drugs",e:"M",h:2.25},
+  {id:103,n:"Insulin & Oral Hypoglycaemic Agents",e:"XL",h:5},
+  {id:104,n:"Corticosteroids",e:"L",h:3},
 ];
-const pathoCh=[
-  {id:201,n:"Immunology",t:"p_immuno",e:"M",h:2.25},
-  {id:202,n:"Environment & Nutritional Disorders",t:"p_env",e:"M",h:2.25},
-  {id:203,n:"Infections",t:"p_infect",e:"M",h:2.25},
-  {id:204,n:"Genetics",t:"p_genetics",e:"M",h:2.25},
-  {id:205,n:"Paediatric Disorders",t:"p_paeds",e:"M",h:2.25},
-  {id:206,n:"GIT Pathology",t:"p_git",e:"M",h:2.25},
-  {id:207,n:"Hepatobiliary Pathology",t:"p_hepato",e:"M",h:2.25},
-  {id:208,n:"CVS Pathology",t:"p_cvs",e:"M",h:2.25},
-  {id:209,n:"Respiratory System Pathology",t:"p_rs",e:"M",h:2.25},
+const newPatho=[
+  {id:205,n:"Paediatric Disorders",e:"M",h:2.25},
+  {id:206,n:"GIT Pathology",e:"M",h:2.25},
+  {id:207,n:"Hepatobiliary Pathology",e:"M",h:2.25},
+  {id:208,n:"CVS Pathology",e:"M",h:2.25},
+  {id:209,n:"Respiratory System Pathology",e:"M",h:2.25},
 ];
 
-// ===== DATES =====
-const HOLIDAYS=new Set(['2026-03-27','2026-03-28','2026-04-02','2026-04-03','2026-04-04','2026-04-13','2026-04-14','2026-04-15']);
-function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function buildDates(){
-  const dates=[];let d=new Date(2026,2,26);const end=new Date(2026,3,20);
-  const todayKey='2026-03-26';
-  while(d<=end){
-    const dow=d.getDay(),key=dk(d),isH=HOLIDAYS.has(key),isS=dow===0;
-    const isToday=key===todayKey;
-    const is8=!isToday&&(isH||isS);
-    let dayType=isToday?'today (4h)':isH&&isS?'holiday+sunday':isH?'holiday':isS?'sunday':'weekday';
-    dates.push({date:new Date(d),isH:isToday?false:isH,isS,is8,isToday,dayType});
-    d.setDate(d.getDate()+1);
-  }
-  return dates;
-}
-const allDates=buildDates();
+// Completed content for revision
+const revMicro=[
+  "Parasitic CVS (Malaria, Leishmaniasis, Filariasis)",
+  "GI Infections (all 8 chapters: syndromes through Helminthic)",
+  "Hepatobiliary (syndromes, Hepatitis, Parasitic)",
+  "Skin & Soft Tissue (syndromes, Staph, Strep, Gas Gangrene, Leprosy)"
+];
+const revPharma=[
+  "CNS Pharmacology (Anaesthetics through CNS Stimulants — 8 chapters)",
+  "Autacoids (Histamine, 5-HT, PGs, NSAIDs, Antigout — 5 chapters)",
+  "GIT (Peptic Ulcer, Antiemetics, Constipation/Diarrhoea — 3 chapters)"
+];
+const revPatho=[
+  "Immunology, Environment & Nutrition, Infections, Genetics"
+];
 
-// ===== SMART SCHEDULER =====
-// Strategy: Micro+Pharma are primary pair. Patho gets holiday bonus 2h slots.
-// Once Pharma finishes, Patho moves into Pharma's main slot on remaining days.
-function buildMasterSchedule(){
-  const days=allDates.map(d=>({
-    ...d,
-    micro:{items:[],hrs:0,budget:0},
-    pharma:{items:[],hrs:0,budget:0},
-    patho:{items:[],hrs:0,budget:0},
-    totalHrs:0,subjects:[]
-  }));
+const totalNewMicro=newMicro.reduce((s,c)=>s+c.h,0); // 25.75
+const totalNewPharma=newPharma.reduce((s,c)=>s+c.h,0); // 14.5
+const totalNewPatho=newPatho.reduce((s,c)=>s+c.h,0); // 11.25
 
-  // Phase 1: Assign budgets
-  // Primary: Micro + Pharma get 2h each on weekdays, 4h each on holidays
-  // Patho: 2h bonus on holidays/sundays only (initially)
-  days.forEach(d=>{
-    if(d.isToday){d.micro.budget=2;d.pharma.budget=2;d.patho.budget=0;}
-    else if(d.is8){d.micro.budget=4;d.pharma.budget=4;d.patho.budget=2;}
-    else{d.micro.budget=2;d.pharma.budget=2;d.patho.budget=0;}
-  });
-
-  function makeSegments(chs){
-    const segs=[];
-    chs.forEach(ch=>{
-      if(ch.e==="XL"){segs.push({...ch,part:"Part 1",pH:2.5});segs.push({...ch,part:"Part 2",pH:2.5});}
-      else{segs.push({...ch,part:null,pH:ch.h});}
-    });
-    return segs;
-  }
-
-  function fillSubject(segs,days,key){
-    let di=0;
-    for(let si=0;si<segs.length;si++){
-      const seg=segs[si];let rem=seg.pH;
-      while(rem>0.01&&di<days.length){
-        const day=days[di],sub=day[key];
-        const avail=sub.budget-sub.hrs;
-        if(avail<=0.01){di++;continue;}
-        const alloc=Math.min(rem,avail);
-        sub.items.push({chapter:seg,allocHrs:Math.round(alloc*100)/100});
-        sub.hrs=Math.round((sub.hrs+alloc)*100)/100;
-        rem=Math.round((rem-alloc)*100)/100;
-        if(rem<=0.01)break;
-        if(sub.hrs>=sub.budget-0.01)di++;
-      }
-    }
-    return di; // index where this subject finished
-  }
-
-  const microSegs=makeSegments(microCh);
-  const pharmaSegs=makeSegments(pharmaCh);
-  const pathoSegs=makeSegments(pathoCh);
-
-  fillSubject(microSegs,days,'micro');
-  const pharmaEndIdx=fillSubject(pharmaSegs,days,'pharma');
-
-  // After pharma finishes, reassign pharma's budget to patho on remaining days
-  for(let i=pharmaEndIdx;i<days.length;i++){
-    if(days[i].pharma.items.length===0){
-      // Patho can take pharma's slot (weekday 2h or holiday 4h)
-      days[i].patho.budget+=days[i].pharma.budget;
-      days[i].pharma.budget=0;
-    }
-  }
-
-  fillSubject(pathoSegs,days,'patho');
-
-  // Mark revision for unused budget
-  days.forEach(d=>{
-    ['micro','pharma','patho'].forEach(k=>{
-      const sub=d[k];
-      if(sub.budget>0&&sub.items.length===0){
-        sub.items.push({chapter:{id:'rev',n:'Revision',t:'revision',e:'R',h:0},allocHrs:sub.budget});
-        sub.hrs=sub.budget;
-      }
-    });
-    d.subjects=[];
-    if(d.micro.items.length>0&&d.micro.budget>0)d.subjects.push('micro');
-    if(d.pharma.items.length>0&&d.pharma.budget>0)d.subjects.push('pharma');
-    if(d.patho.items.length>0&&d.patho.budget>0)d.subjects.push('patho');
-    d.totalHrs=d.micro.hrs+d.pharma.hrs+d.patho.hrs;
-  });
-
-  return days;
-}
-
-const masterSchedule=buildMasterSchedule();
-
-// Extract per-subject schedules for individual tabs
-function extractSubjectSchedule(master,key){
-  return master.map((d,i)=>({
-    ...d,_idx:i,
-    items:d[key].items,
-    plannedHrs:d[key].hrs,
-    budget:d[key].budget,
-    hasContent:d[key].budget>0
-  }));
-}
-const microSch=extractSubjectSchedule(masterSchedule,'micro');
-const pharmaSch=extractSubjectSchedule(masterSchedule,'pharma');
-const pathoSch=extractSubjectSchedule(masterSchedule,'patho');
+// ===== SCHEDULE =====
+const schedule=[
+  // Apr 9 - TODAY - 10h
+  {date:'Apr 9',dow:'Wed',hrs:10,isToday:true,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:4,items:[
+      {n:'Misc Bacterial: Anthrax, Actinomycosis (Part 1)',h:4}
+    ]},
+    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3.5,items:[
+      {n:'Drugs for Cough and Bronchial Asthma',h:3},
+      {n:'Anterior Pituitary Drugs (start)',h:0.5}
+    ]},
+    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.5,items:[
+      {n:'Paediatric Disorders',h:2.25},
+      {n:'GIT Pathology (start)',h:0.25}
+    ]},
+  ]},
+  // Apr 10 - 6h
+  {date:'Apr 10',dow:'Thu',hrs:6,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3,items:[
+      {n:'Misc Bacterial: Anthrax, Actinomycosis (Part 2 — finish)',h:1},
+      {n:'Viral Exanthems: HSV, VZV, Pox, Measles (start)',h:2}
+    ]},
+    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3,items:[
+      {n:'Anterior Pituitary Drugs (finish)',h:0.75},
+      {n:'Thyroid and Anti-thyroid Drugs',h:2.25}
+    ]},
+  ]},
+  // Apr 11 - 6h
+  {date:'Apr 11',dow:'Fri',hrs:6,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.25,items:[
+      {n:'Viral Exanthems (finish)',h:1},
+      {n:'Parasitic: Cutaneous Leish, Cysticercosis',h:2.25}
+    ]},
+    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.75,items:[
+      {n:'GIT Pathology (finish)',h:2},
+      {n:'Hepatobiliary Pathology (start)',h:0.75}
+    ]},
+  ]},
+  // Apr 12 - 10h
+  {date:'Apr 12',dow:'Sat',hrs:10,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.5,items:[
+      {n:'Fungal: Superficial, Subcutaneous, Candidiasis',h:2.25},
+      {n:'Infective Syndromes of CNS',h:1.25}
+    ]},
+    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3,items:[
+      {n:'Insulin & OHA (Part 1)',h:3}
+    ]},
+    {sub:'patho',type:'new',label:'Pathology — New',hrs:3.5,items:[
+      {n:'Hepatobiliary Pathology (finish)',h:1.5},
+      {n:'CVS Pathology (start)',h:2}
+    ]},
+  ]},
+  // Apr 13 - 10h
+  {date:'Apr 13',dow:'Sun',hrs:10,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.5,items:[
+      {n:'Bacterial Meningitis',h:2.25},
+      {n:'Tetanus',h:1.25}
+    ]},
+    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:4,items:[
+      {n:'Insulin & OHA (Part 2 — finish)',h:2},
+      {n:'Corticosteroids (start)',h:2}
+    ]},
+    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.5,items:[
+      {n:'CVS Pathology (finish)',h:0.25},
+      {n:'Respiratory System Pathology',h:2.25}
+    ]},
+  ]},
+  // Apr 14 - 10h
+  {date:'Apr 14',dow:'Mon',hrs:10,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New',hrs:5.25,items:[
+      {n:'Viral Meningitis & Myelitis',h:2.25},
+      {n:'Viral Encephalitis and Encephalopathy',h:3}
+    ]},
+    {sub:'pharma',type:'new',label:'Pharmacology — New (finish!)',hrs:1,items:[
+      {n:'Corticosteroids (finish)',h:1}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.75,items:[
+      {n:'Revision: CNS Pharmacology (8 chapters overview)',h:1.75}
+    ]},
+    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:2,items:[
+      {n:'Revision: Immunology, Environ, Infections, Genetics',h:2}
+    ]},
+  ]},
+  // Apr 15 - 10h — ALL NEW CONTENT DONE, HEAVY REVISION STARTS
+  {date:'Apr 15',dow:'Tue',hrs:10,blocks:[
+    {sub:'micro',type:'new',label:'Microbiology — New (finish!)',hrs:3,items:[
+      {n:'Parasitic & Fungal Infections of CNS',h:3}
+    ]},
+    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:2,items:[
+      {n:'Revision: Parasitic CVS (Malaria, Leish, Filariasis)',h:1},
+      {n:'Revision: GI Infections Part 1 (syndromes, food poisoning, Enterobacteriaceae)',h:1}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:3,items:[
+      {n:'Revision: Autacoids (Histamine, 5-HT, PGs, NSAIDs, Antigout)',h:1.5},
+      {n:'Revision: GIT Pharma (PUD, Antiemetics, Constipation)',h:1.5}
+    ]},
+    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:2,items:[
+      {n:'Revision: Paediatric + GIT + Hepatobiliary Pathology',h:2}
+    ]},
+  ]},
+  // Apr 16 - 6h — FULL REVISION
+  {date:'Apr 16',dow:'Wed',hrs:6,blocks:[
+    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
+      {n:'Revision: GI Part 2 (Cholera, Vibrio, Misc, Viral, Protozoa)',h:1.5},
+      {n:'Revision: GI Part 3 (Helminthic Infections — high yield)',h:1.5}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:3,items:[
+      {n:'Revision: CNS — Anaesthetics, Sedatives, Antiepileptics',h:1.5},
+      {n:'Revision: CNS — Parkinsonism, Antipsychotics, Antidepressants',h:1.5}
+    ]},
+  ]},
+  // Apr 17 - 6h
+  {date:'Apr 17',dow:'Thu',hrs:6,blocks:[
+    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
+      {n:'Revision: Hepatobiliary (syndromes, Hepatitis, Parasitic)',h:1.5},
+      {n:'Revision: Skin & Soft Tissue Part 1 (Staph, Strep, Gangrene, Leprosy)',h:1.5}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.5,items:[
+      {n:'Revision: CNS — Opioids, Stimulants',h:1.5}
+    ]},
+    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:1.5,items:[
+      {n:'Revision: CVS + Respiratory Pathology',h:1.5}
+    ]},
+  ]},
+  // Apr 18 - 6h
+  {date:'Apr 18',dow:'Fri',hrs:6,blocks:[
+    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
+      {n:'Revision: Skin Part 2 (Misc Bacterial, Viral Exanthems, Parasitic, Fungal)',h:1.5},
+      {n:'Revision: CNS Micro (Meningitis, Tetanus, Encephalitis, Parasitic CNS)',h:1.5}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.5,items:[
+      {n:'Revision: Cough/Asthma, Pituitary, Thyroid',h:1.5}
+    ]},
+    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:1.5,items:[
+      {n:'Revision: Full Pathology rapid review (all 9 topics)',h:1.5}
+    ]},
+  ]},
+  // Apr 19 - 10h — INTEGRATED REVISION
+  {date:'Apr 19',dow:'Sat',hrs:10,blocks:[
+    {sub:'micro',type:'rev',label:'Microbiology — Grand Revision',hrs:4,items:[
+      {n:'Full Micro rapid review: system-by-system walkthrough',h:2.5},
+      {n:'Weak areas & high-yield topics re-read',h:1.5}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharmacology — Grand Revision',hrs:4,items:[
+      {n:'Full Pharma rapid review: drug classes, MOA, side effects',h:2.5},
+      {n:'Revision: Insulin, OHA, Corticosteroids (newest content)',h:1.5}
+    ]},
+    {sub:'patho',type:'rev',label:'Pathology — Grand Revision',hrs:2,items:[
+      {n:'Full Patho rapid review: all 9 topics concept maps',h:2}
+    ]},
+  ]},
+  // Apr 20 - 6h
+  {date:'Apr 20',dow:'Sun',hrs:6,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Final Pass',hrs:2,items:[
+      {n:'High-yield tables, differentials, diagrams',h:2}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharma — Final Pass',hrs:2,items:[
+      {n:'Drug comparison tables, dosing, contraindications',h:2}
+    ]},
+    {sub:'patho',type:'rev',label:'Patho — Final Pass',hrs:2,items:[
+      {n:'Key pathology images, buzzwords, differentials',h:2}
+    ]},
+  ]},
+  // Apr 21 - 6h
+  {date:'Apr 21',dow:'Mon',hrs:6,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Final Sweep',hrs:2,items:[
+      {n:'Quick-fire review: weakest topics + practice Qs',h:2}
+    ]},
+    {sub:'pharma',type:'rev',label:'Pharma — Final Sweep',hrs:2,items:[
+      {n:'Quick-fire review: newest chapters + practice Qs',h:2}
+    ]},
+    {sub:'patho',type:'rev',label:'Patho — Final Sweep',hrs:2,items:[
+      {n:'Quick-fire review: all systems + practice Qs',h:2}
+    ]},
+  ]},
+];
 
 // ===== STATE =====
-let completed={micro:{},pharma:{},patho:{}};
+let completed={};
+try{const s=localStorage.getItem('replan1');if(s)completed=JSON.parse(s);}catch(e){}
+function saveState(){try{localStorage.setItem('replan1',JSON.stringify(completed));}catch(e){}}
+
+// Gist sync
 let GIST_ID=localStorage.getItem('sp_gist_id')||'';
 let GH_TOKEN=localStorage.getItem('sp_gh_token')||'';
-let syncStatus='idle'; // idle, syncing, synced, error
-
-// Load from localStorage as fallback
-try{const s=localStorage.getItem('sc4');if(s)completed=JSON.parse(s);}catch(e){}
-
-function saveLocal(){try{localStorage.setItem('sc4',JSON.stringify(completed));}catch(e){}}
-
 async function gistSave(){
   if(!GH_TOKEN)return;
-  syncStatus='syncing';updateSyncBadge();
   try{
-    const body={description:"Study Plan Progress",public:false,files:{"progress.json":{content:JSON.stringify(completed)}}};
-    let url='https://api.github.com/gists';
-    let method='POST';
-    if(GIST_ID){url+=('/'+GIST_ID);method='PATCH';}
+    const body={description:"Study Replan Progress",public:false,files:{"replan.json":{content:JSON.stringify(completed)}}};
+    let url='https://api.github.com/gists',method='POST';
+    if(GIST_ID){url+='/'+GIST_ID;method='PATCH';}
     const r=await fetch(url,{method,headers:{'Authorization':'token '+GH_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!r.ok)throw new Error(r.status);
-    const data=await r.json();
-    if(!GIST_ID){GIST_ID=data.id;localStorage.setItem('sp_gist_id',GIST_ID);}
-    syncStatus='synced';
-  }catch(e){console.error('Gist save error:',e);syncStatus='error';}
-  updateSyncBadge();
+    if(r.ok){const d=await r.json();if(!GIST_ID){GIST_ID=d.id;localStorage.setItem('sp_gist_id',GIST_ID);}}
+  }catch(e){console.error(e);}
 }
-
 async function gistLoad(){
   if(!GH_TOKEN||!GIST_ID)return false;
-  syncStatus='syncing';updateSyncBadge();
   try{
     const r=await fetch('https://api.github.com/gists/'+GIST_ID,{headers:{'Authorization':'token '+GH_TOKEN}});
-    if(!r.ok)throw new Error(r.status);
-    const data=await r.json();
-    const content=data.files['progress.json']?.content;
-    if(content){completed=JSON.parse(content);saveLocal();syncStatus='synced';updateSyncBadge();return true;}
-  }catch(e){console.error('Gist load error:',e);syncStatus='error';updateSyncBadge();}
+    if(!r.ok)return false;
+    const d=await r.json();
+    const c=d.files['replan.json']?.content;
+    if(c){completed=JSON.parse(c);saveState();return true;}
+  }catch(e){console.error(e);}
   return false;
 }
 
-function saveState(){saveLocal();gistSave();}
+// ===== RENDER =====
+function render(){
+  const app=document.getElementById('app');
+  const totalHrs=schedule.reduce((s,d)=>s+d.hrs,0);
+  const doneHrs=schedule.reduce((s,d,i)=>s+(completed[i]?d.hrs:0),0);
+  const doneDays=Object.keys(completed).filter(k=>completed[k]).length;
+  const pct=totalHrs>0?Math.round((doneHrs/totalHrs)*100):0;
 
-function updateSyncBadge(){
-  const el=document.getElementById('syncBadge');
-  if(!el)return;
-  const icons={idle:'○',syncing:'↻',synced:'✓',error:'✕'};
-  const colors={idle:'var(--text-dim)',syncing:'var(--pharma)',synced:'var(--micro)',error:'var(--patho)'};
-  const labels={idle:'Not connected',syncing:'Syncing…',synced:'Synced',error:'Sync error'};
-  el.innerHTML=`<span style="color:${colors[syncStatus]}">${icons[syncStatus]} ${labels[syncStatus]}</span>`;
-}
+  // Count new vs revision hours
+  let newH={micro:0,pharma:0,patho:0},revH={micro:0,pharma:0,patho:0};
+  schedule.forEach(d=>{
+    d.blocks.forEach(b=>{
+      if(b.type==='new')(newH[b.sub]||0,newH[b.sub]+=b.hrs);
+      else(revH[b.sub]||0,revH[b.sub]+=b.hrs);
+    });
+  });
 
-function showTokenPrompt(){
-  const overlay=document.getElementById('tokenOverlay');
-  overlay.style.display='flex';
-  document.getElementById('tokenSave').onclick=async()=>{
-    const t=document.getElementById('tokenInput').value.trim();
-    if(!t)return;
-    GH_TOKEN=t;localStorage.setItem('sp_gh_token',GH_TOKEN);
-    overlay.style.display='none';
-    const loaded=await gistLoad();
-    if(loaded){renderAll();}else{await gistSave();}
-  };
-  document.getElementById('tokenSkip').onclick=()=>{overlay.style.display='none';};
-}
-
-// Init sync
-(async()=>{
-  if(GH_TOKEN){
-    const loaded=await gistLoad();
-    if(loaded)renderAll();
-  }
-})();
-
-const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const MS=['Jan','Feb','Mar','Apr','May'];
-const ML=['January','February','March','April','May'];
-const today=new Date();
-
-function calcStats(sch,comp,chs,key){
-  const activeDays=sch.filter(d=>d.hasContent);
-  const totalDays=activeDays.length;
-  const doneDays=activeDays.filter(d=>comp[key][d._idx]).length;
-  const totalHrs=activeDays.reduce((s,d)=>s+d.plannedHrs,0);
-  const doneHrs=activeDays.filter(d=>comp[key][d._idx]).reduce((s,d)=>s+d.plannedHrs,0);
-  const contentDays=activeDays.filter(d=>d.items.some(it=>it.chapter.id!=='rev')).length;
-  const revDays=activeDays.filter(d=>d.items.every(it=>it.chapter.id==='rev')).length;
-  return{totalDays,doneDays,totalHrs:Math.round(totalHrs*10)/10,doneHrs:Math.round(doneHrs*10)/10,totalChapters:chs.length,contentDays,revDays};
-}
-
-// ===== RENDER SUBJECT TAB =====
-function renderSubTab(cid,sch,chs,topics,key,accent,fclass){
-  const c=document.getElementById(cid);
-  const st=calcStats(sch,completed,chs,key);
-  let h=`
-    <div class="stats-bar">
-      <div class="stat"><div class="label">Study Days</div><div class="value">${st.contentDays}</div></div>
-      <div class="stat"><div class="label">Revision</div><div class="value">${st.revDays}</div></div>
-      <div class="stat"><div class="label">Done</div><div class="value ${accent}">${st.doneDays} days</div></div>
-      <div class="stat"><div class="label">Hours</div><div class="value">${st.totalHrs}</div></div>
-      <div class="stat"><div class="label">Completed</div><div class="value ${accent}">${st.doneHrs}h</div></div>
+  let html=`
+    <div class="summary">
+      <h3>Replan Summary</h3>
+      <div class="sum-grid">
+        <div class="sum-card mc">
+          <h4>🦠 Microbiology</h4>
+          <div class="sc-row"><span>New content</span><span class="scv">25.75h (10 ch)</span></div>
+          <div class="sc-row"><span>Revision</span><span class="scv">~17h</span></div>
+        </div>
+        <div class="sum-card pc">
+          <h4>💊 Pharmacology</h4>
+          <div class="sc-row"><span>New content</span><span class="scv">14.5h (5 ch)</span></div>
+          <div class="sc-row"><span>Revision</span><span class="scv">~19h</span></div>
+        </div>
+        <div class="sum-card tc">
+          <h4>🔬 Pathology</h4>
+          <div class="sc-row"><span>New content</span><span class="scv">11.25h (5 ch)</span></div>
+          <div class="sc-row"><span>Revision</span><span class="scv">~13h</span></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim)">
+        <span><strong style="color:var(--text)">${doneDays}</strong> / ${schedule.length} days done</span>
+        <span><strong style="color:var(--accent)">${doneHrs}h</strong> / ${totalHrs}h completed</span>
+        <span><strong style="color:var(--text)">${pct}%</strong> progress</span>
+      </div>
+      <div class="progress-wrap" style="margin-top:.5rem"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>
     </div>
-    <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill ${key}" style="width:${st.totalDays>0?(st.doneDays/st.totalDays)*100:0}%"></div></div></div>
-    <div class="legend">${Object.entries(topics).map(([k,v])=>`<div class="legend-item"><div class="legend-dot" style="background:var(--${k})"></div>${v}</div>`).join('')}</div>
-    <div class="controls ${fclass}" id="f-${key}"></div>
-    <div class="calendar" id="cal-${key}"></div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--micro)"></div>Micro (new)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pharma)"></div>Pharma (new)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--patho)"></div>Patho (new)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-micro)"></div>Micro (revision)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-pharma)"></div>Pharma (revision)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-patho)"></div>Patho (revision)</div>
+    </div>
+
+    <div class="day-grid">
   `;
-  c.innerHTML=h;
-  let af=null;
-  function rF(){
-    const fc=document.getElementById(`f-${key}`);
-    fc.innerHTML=`<button class="${!af?'active':''}" data-f="">All</button>`+Object.entries(topics).map(([k,v])=>`<button class="${af===k?'active':''}" data-f="${k}">${v}</button>`).join('');
-    fc.querySelectorAll('button').forEach(b=>{b.onclick=()=>{af=b.dataset.f||null;rF();rC();};});
-  }
-  function rC(){
-    const cal=document.getElementById(`cal-${key}`);cal.innerHTML='';
-    const activeSch=sch.filter(d=>d.hasContent);
-    if(!activeSch.length){cal.innerHTML='<div class="footer-note">No scheduled days for this subject.</div>';return;}
-    let weeks=[],cw=[];
-    let sd=activeSch[0].date.getDay();if(sd===0)sd=7;
-    for(let i=1;i<sd;i++)cw.push(null);
-    activeSch.forEach(day=>{cw.push(day);if(day.date.getDay()===0){weeks.push(cw);cw=[];}});
-    if(cw.length){while(cw.length<7)cw.push(null);weeks.push(cw);}
-    const hdr=document.createElement('div');hdr.className='week';
-    hdr.innerHTML=`<div class="week-label"></div><div class="week-days">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="day-hdr">${d}</div>`).join('')}</div>`;
-    cal.appendChild(hdr);
-    weeks.forEach(wk=>{
-      const fd=wk.find(d=>d!==null);
-      const row=document.createElement('div');row.className='week';
-      const lbl=document.createElement('div');lbl.className='week-label';
-      if(fd)lbl.textContent=MS[fd.date.getMonth()]+' '+fd.date.getDate();
-      row.appendChild(lbl);
-      const dd=document.createElement('div');dd.className='week-days';
-      wk.forEach(day=>{
-        if(!day){dd.appendChild(Object.assign(document.createElement('div'),{className:'day-empty'}));return;}
-        const card=document.createElement('div');card.className='day-card';
-        if(day.is8)card.classList.add('holiday-day');
-        if(completed[key][day._idx])card.classList.add('completed');
-        if(day.date.toDateString()===today.toDateString())card.classList.add('today');
-        let tt='';if(day.isH)tt='<span class="day-type holiday">HOL</span>';else if(day.isS)tt='<span class="day-type sunday">SUN</span>';
-        let pills='';
-        day.items.forEach(it=>{
-          if(af&&it.chapter.t!==af&&it.chapter.t!=='revision')return;
-          const pt=it.chapter.part?` (${it.chapter.part})`:'';
-          const sn=it.chapter.n.length>38?it.chapter.n.slice(0,35)+'…':it.chapter.n;
-          pills+=`<div class="ch-pill"><span class="eff">${it.chapter.e}</span>${sn}${pt} <span style="color:var(--accent);font-weight:600">${it.allocHrs}h</span></div>`;
-        });
-        card.innerHTML=`<div class="day-header"><div><span class="day-num">${day.date.getDate()}</span> <span class="day-name">${DOW[day.date.getDay()]}</span> ${tt}</div><div class="day-hrs">${day.plannedHrs}h</div></div>${pills}`;
-        card.onclick=()=>openSubModal(day,key,topics);
-        dd.appendChild(card);
+
+  schedule.forEach((day,i)=>{
+    const isDone=completed[i];
+    const isToday=day.isToday;
+    html+=`<div class="day-row${isDone?' completed':''}${isToday?' is-today':''}" onclick="toggleDay(${i})">
+      <div class="day-hdr">
+        <div class="dh-left">
+          <span class="day-date">${day.date}</span>
+          <span class="day-dow">${day.dow}${isToday?' · TODAY':''}</span>
+        </div>
+        <span class="day-total">${day.hrs}h</span>
+      </div>
+      <div class="day-blocks">`;
+
+    day.blocks.forEach(b=>{
+      const cls=b.type==='rev'?`b-rev-${b.sub}`:`b-${b.sub}`;
+      html+=`<div class="block ${cls}">
+        <div class="bl-hdr">${b.label} · ${b.hrs}h</div>
+        <div class="bl-items">`;
+      b.items.forEach(it=>{
+        html+=`<div class="ch">${it.n} — <span class="hrs">${it.h}h</span></div>`;
       });
-      row.appendChild(dd);cal.appendChild(row);
+      html+=`</div></div>`;
     });
-  }
-  rF();rC();
+
+    html+=`</div></div>`;
+  });
+
+  html+=`</div>
+    <div class="footer-note">
+      <strong>Strategy:</strong> Apr 9–15: Finish all remaining new chapters (Micro 10 ch, Pharma 5 ch, Patho 5 ch) while starting revision for Pharma and Patho. Apr 15–18: Intensive revision of all completed content, organized by system. Apr 19: Grand integrated revision across all three subjects. Apr 20–21: Final pass with high-yield focus and practice questions. Click any day to mark it complete.
+    </div>
+  `;
+  app.innerHTML=html;
 }
 
-function openSubModal(day,key,topics){
+function toggleDay(i){
   const ov=document.getElementById('modalOverlay');
-  document.getElementById('modalTitle').textContent=DOW[day.date.getDay()]+', '+ML[day.date.getMonth()]+' '+day.date.getDate();
-  document.getElementById('modalDate').textContent=`${day.plannedHrs}h · ${day.dayType}`;
-  let b='<div class="m-subject">';
-  b+=`<h4 style="color:var(--${key})">${key.charAt(0).toUpperCase()+key.slice(1)}</h4>`;
-  day.items.forEach(it=>{
-    const pt=it.chapter.part?' — '+it.chapter.part:'';
-    const tl=topics[it.chapter.t]||it.chapter.t;
-    b+=`<div class="m-ch">${it.chapter.n}${pt} · ${it.allocHrs}h<span class="tag">${tl}</span></div>`;
+  const day=schedule[i];
+  const isDone=completed[i];
+
+  let body=`<h3>${day.date} ${day.dow} — ${day.hrs}h${day.isToday?' (Today)':''}</h3>`;
+  day.blocks.forEach(b=>{
+    const color=b.sub==='micro'?'var(--micro)':b.sub==='pharma'?'var(--pharma)':'var(--patho)';
+    body+=`<div style="margin:.5rem 0;padding:.5rem .7rem;border-left:3px solid ${color};border-radius:6px;background:rgba(0,0,0,.02)">
+      <div style="font-size:.78rem;font-weight:700;color:${color}">${b.label} · ${b.hrs}h</div>`;
+    b.items.forEach(it=>{
+      body+=`<div style="font-size:.75rem;color:var(--text-dim);padding:.15rem 0">${it.n} — <strong>${it.h}h</strong></div>`;
+    });
+    body+=`</div>`;
   });
-  b+='</div>';
-  document.getElementById('modalBody').innerHTML=b;
-  const isDone=completed[key][day._idx];
-  document.getElementById('modalActions').innerHTML=`
-    <button class="modal-btn ${isDone?'undo':'toggle'}" id="tBtn">${isDone?'✕ Undo':'✓ Done'}</button>
-    <button class="modal-btn close" id="cBtn">Close</button>`;
+  body+=`<div class="modal-actions">
+    <button class="modal-btn ${isDone?'undo':'toggle'}" onclick="doToggle(${i})">${isDone?'✕ Mark Incomplete':'✓ Mark Complete'}</button>
+    <button class="modal-btn close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
+  </div>`;
+  document.getElementById('modal').innerHTML=body;
   ov.classList.add('show');
-  document.getElementById('tBtn').onclick=()=>{completed[key][day._idx]=!completed[key][day._idx];saveState();renderAll();ov.classList.remove('show');};
-  document.getElementById('cBtn').onclick=()=>ov.classList.remove('show');
 }
 
-// ===== MASTER CALENDAR (Dashboard daily view uses this) =====
-function openMasterModal(dayIdx){
-  const d=masterSchedule[dayIdx];
-  const ov=document.getElementById('modalOverlay');
-  document.getElementById('modalTitle').textContent=DOW[d.date.getDay()]+', '+ML[d.date.getMonth()]+' '+d.date.getDate();
-  document.getElementById('modalDate').textContent=`${d.totalHrs}h total · ${d.dayType} · ${d.subjects.join(' + ')}`;
-  let b='';
-  const subjectInfo=[
-    {key:'micro',label:'🦠 Microbiology',color:'var(--micro)',topics:MICRO_TOPICS},
-    {key:'pharma',label:'💊 Pharmacology',color:'var(--pharma)',topics:PHARMA_TOPICS},
-    {key:'patho',label:'🔬 Pathology',color:'var(--patho)',topics:PATHO_TOPICS}
-  ];
-  subjectInfo.forEach(si=>{
-    const sub=d[si.key];
-    if(sub.items.length===0||sub.budget===0)return;
-    b+=`<div class="m-subject"><h4 style="color:${si.color}">${si.label} — ${sub.hrs}h</h4>`;
-    sub.items.forEach(it=>{
-      const pt=it.chapter.part?' — '+it.chapter.part:'';
-      const tl=si.topics[it.chapter.t]||it.chapter.t;
-      b+=`<div class="m-ch">${it.chapter.n}${pt} · ${it.allocHrs}h<span class="tag">${tl}</span></div>`;
-    });
-    b+='</div>';
-  });
-  document.getElementById('modalBody').innerHTML=b;
-  document.getElementById('modalActions').innerHTML=`<button class="modal-btn close" id="cBtn">Close</button>`;
-  ov.classList.add('show');
-  document.getElementById('cBtn').onclick=()=>ov.classList.remove('show');
+function doToggle(i){
+  completed[i]=!completed[i];
+  saveState();gistSave();render();
+  document.getElementById('modalOverlay').classList.remove('show');
 }
+
 document.getElementById('modalOverlay').onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('show');};
 
-// ===== DASHBOARD =====
-function renderDash(){
-  const ms=calcStats(microSch,completed,microCh,'micro');
-  const ps=calcStats(pharmaSch,completed,pharmaCh,'pharma');
-  const ts=calcStats(pathoSch,completed,pathoCh,'patho');
-  const totalH=ms.totalHrs+ps.totalHrs+ts.totalHrs;
-  const doneH=ms.doneHrs+ps.doneHrs+ts.doneHrs;
-  const pct=k=>{const s=k==='micro'?ms:k==='pharma'?ps:ts;return s.totalHrs>0?Math.round((s.doneHrs/s.totalHrs)*100):0;};
-  const oPct=totalH>0?Math.round((doneH/totalH)*100):0;
-
-  let h=`
-    <div class="combined-stats">
-      <h3>Overall Progress</h3>
-      <div style="display:flex;gap:1.5rem;margin-bottom:.7rem;flex-wrap:wrap">
-        <div><span style="font-size:.7rem;color:var(--text-dim)">Total</span><div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem">${totalH}h</div></div>
-        <div><span style="font-size:.7rem;color:var(--text-dim)">Done</span><div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem;color:var(--accent)">${doneH}h</div></div>
-        <div><span style="font-size:.7rem;color:var(--text-dim)">Progress</span><div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem">${oPct}%</div></div>
-      </div>
-      <div class="dp"><div class="dpl" style="color:var(--micro)">Microbiology</div><div class="dpb"><div class="dpf" style="width:${pct('micro')}%;background:var(--micro)"></div></div><div class="dpp" style="color:var(--micro)">${pct('micro')}%</div></div>
-      <div class="dp"><div class="dpl" style="color:var(--pharma)">Pharmacology</div><div class="dpb"><div class="dpf" style="width:${pct('pharma')}%;background:var(--pharma)"></div></div><div class="dpp" style="color:var(--pharma)">${pct('pharma')}%</div></div>
-      <div class="dp"><div class="dpl" style="color:var(--patho)">Pathology</div><div class="dpb"><div class="dpf" style="width:${pct('patho')}%;background:var(--patho)"></div></div><div class="dpp" style="color:var(--patho)">${pct('patho')}%</div></div>
-    </div>
-    <div class="dash-grid">
-      ${[{k:'micro',l:'🦠 Microbiology',c:'micro-card',s:ms,cl:'var(--micro)'},
-         {k:'pharma',l:'💊 Pharmacology',c:'pharma-card',s:ps,cl:'var(--pharma)'},
-         {k:'patho',l:'🔬 Pathology',c:'patho-card',s:ts,cl:'var(--patho)'}].map(x=>`
-        <div class="dash-card ${x.c}">
-          <h3 style="color:${x.cl}">${x.l}</h3>
-          <div class="ds"><span class="dsl">Chapters</span><span class="dsv">${x.s.totalChapters}</span></div>
-          <div class="ds"><span class="dsl">Study days</span><span class="dsv">${x.s.contentDays}</span></div>
-          <div class="ds"><span class="dsl">Revision</span><span class="dsv">${x.s.revDays}</span></div>
-          <div class="ds"><span class="dsl">Hours</span><span class="dsv">${x.s.totalHrs}h</span></div>
-          <div class="ds"><span class="dsl">Done</span><span class="dsv" style="color:${x.cl}">${x.s.doneHrs}h</span></div>
-        </div>`).join('')}
-    </div>
-    <div class="daily-overview">
-      <h3>Daily Load — All Subjects</h3>
-      <div style="font-size:.68rem;color:var(--text-dim);margin-bottom:.5rem">
-        <span style="color:var(--micro)">■</span> Micro · <span style="color:var(--pharma)">■</span> Pharma · <span style="color:var(--patho)">■</span> Patho · Bright=done · Faded=pending
-      </div>
-      ${masterSchedule.map((d,i)=>{
-        const mh=d.micro.hrs,ph=d.pharma.hrs,th=d.patho.hrs;
-        const mc=completed.micro[i],pc=completed.pharma[i],tc=completed.patho[i];
-        const isT=d.date.toDateString()===today.toDateString();
-        const max=4;
-        const bw=v=>v>0?Math.max((v/max)*100,6):0;
-        let badge='';if(d.isH)badge='<span class="hol">HOL</span>';else if(d.isS)badge='<span class="sun">SUN</span>';
-        return `<div class="dr${isT?' is-today':''}" style="cursor:pointer" onclick="openMasterModal(${i})">
-          <div class="drd">${MS[d.date.getMonth()]} ${d.date.getDate()} ${DOW[d.date.getDay()]}</div>
-          <div class="drb">${badge}</div>
-          <div class="drbars">
-            ${mh>0?`<div class="bar mb${mc?' done':' undone'}" style="width:${bw(mh)}%" title="Micro ${mh}h"></div>`:''}
-            ${ph>0?`<div class="bar pb${pc?' done':' undone'}" style="width:${bw(ph)}%" title="Pharma ${ph}h"></div>`:''}
-            ${th>0?`<div class="bar tb${tc?' done':' undone'}" style="width:${bw(th)}%" title="Patho ${th}h"></div>`:''}
-          </div>
-          <div class="drh">${d.totalHrs}h</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="footer-note">
-      <strong>Schedule logic:</strong> Today (Mar 26) = 4h only (2h Micro + 2h Pharma). Remaining holidays (Mar 27–28, Apr 2–4, 13–15) and Sundays = 8h base + 2h Patho bonus. Weekdays = 4h (2h × 2 subjects). Once Pharma finishes, Patho takes over Pharma's slot. Click any day for details.
-    </div>
-  `;
-  document.getElementById('content-dashboard').innerHTML=h;
-}
-
-// ===== TABS =====
-const tbs=document.querySelectorAll('.tab-btn');
-function sTab(t){
-  tbs.forEach(b=>{b.className='tab-btn';});
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  const cls={dashboard:'active-dash',micro:'active-micro',pharma:'active-pharma',patho:'active-patho'};
-  document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).className='tab-btn '+cls[t];
-  document.getElementById('content-'+t).classList.add('active');
-}
-tbs.forEach(b=>{b.onclick=()=>sTab(b.dataset.tab);});
-
-function renderAll(){
-  renderDash();
-  renderSubTab('content-micro',microSch,microCh,MICRO_TOPICS,'micro','micro-accent','');
-  renderSubTab('content-pharma',pharmaSch,pharmaCh,PHARMA_TOPICS,'pharma','pharma-accent','pharma-controls');
-  renderSubTab('content-patho',pathoSch,pathoCh,PATHO_TOPICS,'patho','patho-accent','patho-controls');
-}
-renderAll();
-updateSyncBadge();
-if(!GH_TOKEN){setTimeout(()=>showTokenPrompt(),800);}
+render();
+(async()=>{if(GH_TOKEN){const ok=await gistLoad();if(ok)render();}})();
 </script>
 </body>
 </html>
