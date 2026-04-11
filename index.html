@@ -3,488 +3,414 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Replan — Apr 9–21</title>
+<title>Study Tracker — Full Progress + Replan</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#f5f6fa;--card:#fff;--border:#e0e2ea;--text:#1e1f26;--text-dim:#6b7084;
-  --accent:#059669;--accent-dim:#d1fae5;
-  --micro:#059669;--pharma:#6366f1;--patho:#e11d48;
-  --rev-micro:#86efac;--rev-pharma:#a5b4fc;--rev-patho:#fda4af;
-}
+:root{--bg:#f5f6fa;--card:#fff;--border:#e0e2ea;--text:#1e1f26;--text-dim:#6b7084;--accent:#059669;--accent-dim:#d1fae5;--micro:#059669;--pharma:#6366f1;--patho:#e11d48;--rev-micro:#86efac;--rev-pharma:#a5b4fc;--rev-patho:#fda4af;--done-bg:#f0fdf4;--pend-bg:#fef2f2}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.container{max-width:1100px;margin:0 auto;padding:0 1.5rem 2rem}
-header{padding:2rem 0 1rem}
+.container{max-width:1150px;margin:0 auto;padding:0 1.5rem 2rem}
+header{padding:2rem 0 .8rem}
 header h1{font-family:'Fraunces',serif;font-weight:900;font-size:1.8rem;background:linear-gradient(135deg,var(--micro),var(--pharma),var(--patho));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:var(--text-dim);margin-top:.3rem;font-size:.85rem}
-.summary{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.04);position:relative;overflow:hidden}
-.summary::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--micro),var(--pharma),var(--patho))}
-.summary h3{font-family:'Fraunces',serif;font-weight:700;font-size:1rem;margin-bottom:.6rem}
-.sum-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:.8rem}
-.sum-card{padding:.6rem;border-radius:8px;border:1px solid var(--border)}
-.sum-card h4{font-size:.78rem;margin-bottom:.3rem}
-.sum-card .sc-row{display:flex;justify-content:space-between;font-size:.72rem;padding:.15rem 0;color:var(--text-dim)}
-.sum-card .sc-row .scv{font-weight:700;color:var(--text)}
-.sum-card.mc{border-left:3px solid var(--micro)}.sum-card.mc h4{color:var(--micro)}
-.sum-card.pc{border-left:3px solid var(--pharma)}.sum-card.pc h4{color:var(--pharma)}
-.sum-card.tc{border-left:3px solid var(--patho)}.sum-card.tc h4{color:var(--patho)}
-.avail-bar{display:flex;gap:.15rem;height:10px;border-radius:5px;overflow:hidden;margin-top:.4rem}
-.avail-bar div{border-radius:3px;transition:width .3s}
+header p{color:var(--text-dim);margin-top:.25rem;font-size:.85rem}
+.tabs{display:flex;gap:.2rem;margin-bottom:1.3rem;background:var(--card);border-radius:11px;padding:.2rem;border:1px solid var(--border)}
+.tab-btn{flex:1;padding:.6rem .7rem;border:none;background:transparent;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;border-radius:9px;transition:all .2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:#fff}
+.tab-btn.active[data-t="progress"]{background:var(--accent)}
+.tab-btn.active[data-t="replan"]{background:var(--pharma)}
+.tab-content{display:none}.tab-content.active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-.progress-wrap{margin-bottom:1.2rem}
-.progress-bar{height:5px;background:rgba(0,0,0,.06);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .5s;background:linear-gradient(90deg,var(--micro),var(--pharma),var(--patho))}
+/* === PROGRESS TAB === */
+.overall-ring{display:flex;align-items:center;gap:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;box-shadow:0 1px 3px rgba(0,0,0,.04);flex-wrap:wrap}
+.ring-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-wrap .ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-wrap .ring-pct{font-family:'Fraunces',serif;font-weight:900;font-size:1.6rem;line-height:1}
+.ring-wrap .ring-sub{font-size:.6rem;color:var(--text-dim);margin-top:.15rem}
+.ring-details{flex:1;min-width:200px}
+.ring-details .rd-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.rd-bar-wrap{flex:1;height:8px;background:rgba(0,0,0,.06);border-radius:4px;overflow:hidden}
+.rd-bar{height:100%;border-radius:4px;transition:width .6s}
+.rd-label{font-size:.75rem;width:85px;flex-shrink:0;font-weight:600}
+.rd-pct{font-size:.75rem;width:38px;text-align:right;font-weight:700}
+.rd-hrs{font-size:.68rem;color:var(--text-dim);width:80px;text-align:right}
 
-/* Day cards */
-.day-grid{display:grid;gap:.8rem}
-.day-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;box-shadow:0 1px 2px rgba(0,0,0,.03);cursor:pointer;transition:all .2s;position:relative}
-.day-row:hover{box-shadow:0 4px 12px rgba(0,0,0,.07);transform:translateY(-1px)}
-.day-row.completed{opacity:.6}
-.day-row.completed::after{content:'✓ Done';position:absolute;top:.8rem;right:1rem;font-size:.7rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:.15rem .5rem;border-radius:4px}
-.day-row.is-today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.day-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
-.day-hdr .dh-left{display:flex;align-items:center;gap:.5rem}
-.day-hdr .day-date{font-family:'Fraunces',serif;font-weight:700;font-size:1rem}
-.day-hdr .day-dow{font-size:.7rem;color:var(--text-dim);text-transform:uppercase}
-.day-hdr .day-total{font-size:.8rem;font-weight:700;color:var(--text-dim)}
-.day-blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.5rem}
-.block{padding:.5rem .7rem;border-radius:8px;border-left:3px solid}
+.subject-section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.subject-header{padding:.8rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.subject-header:hover{background:rgba(0,0,0,.02)}
+.subject-header h3{font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.4rem}
+.subject-header .sh-stats{display:flex;gap:.8rem;font-size:.72rem;color:var(--text-dim)}
+.subject-header .sh-stats strong{color:var(--text)}
+.subject-header .arrow{transition:transform .2s;font-size:.7rem;color:var(--text-dim)}
+.subject-body{display:none;padding:0 1rem .8rem}
+.subject-body.open{display:block}
+.topic-group{margin-bottom:.6rem}
+.topic-group-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin-bottom:.3rem;padding-bottom:.2rem;border-bottom:1px solid var(--border)}
+.ch-row{display:flex;align-items:center;gap:.5rem;padding:.3rem .4rem;border-radius:6px;margin-bottom:.15rem;font-size:.74rem}
+.ch-row.done{background:var(--done-bg)}
+.ch-row.partial{background:#fffbeb}
+.ch-row.pending{background:var(--pend-bg)}
+.ch-status{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0}
+.ch-status.done{background:var(--accent);color:#fff}
+.ch-status.partial{background:#f59e0b;color:#fff}
+.ch-status.pending{background:rgba(0,0,0,.1);color:var(--text-dim)}
+.ch-name{flex:1}
+.ch-effort{font-size:.65rem;padding:.1rem .3rem;border-radius:3px;background:rgba(0,0,0,.05);font-weight:600}
+.ch-hrs{font-size:.68rem;color:var(--text-dim);font-weight:600}
+
+/* === REPLAN TAB === */
+.phase-label{font-family:'Fraunces',serif;font-weight:700;font-size:.85rem;color:var(--text-dim);margin:1rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
+.phase-label span{font-size:.68rem;font-weight:500;margin-left:.4rem}
+.day-grid{display:grid;gap:.6rem}
+.day-row{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:.85rem;box-shadow:0 1px 2px rgba(0,0,0,.03);cursor:pointer;transition:all .2s;position:relative}
+.day-row:hover{box-shadow:0 4px 12px rgba(0,0,0,.06);transform:translateY(-1px)}
+.day-row.completed{opacity:.55}
+.day-row.completed::after{content:'✓';position:absolute;top:.7rem;right:.8rem;font-size:.85rem;font-weight:700;color:var(--accent)}
+.day-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem}
+.day-hdr .dh-left{display:flex;align-items:center;gap:.4rem}
+.day-date{font-family:'Fraunces',serif;font-weight:700;font-size:.92rem}
+.day-dow{font-size:.65rem;color:var(--text-dim);text-transform:uppercase}
+.day-total{font-size:.75rem;font-weight:700;color:var(--text-dim)}
+.day-blocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.4rem}
+.block{padding:.4rem .6rem;border-radius:6px;border-left:3px solid}
 .block.b-micro{border-color:var(--micro);background:rgba(5,150,105,.04)}
 .block.b-pharma{border-color:var(--pharma);background:rgba(99,102,241,.04)}
 .block.b-patho{border-color:var(--patho);background:rgba(225,29,72,.04)}
-.block.b-rev-micro{border-color:var(--rev-micro);background:rgba(134,239,172,.08)}
-.block.b-rev-pharma{border-color:var(--rev-pharma);background:rgba(165,180,252,.08)}
-.block.b-rev-patho{border-color:var(--rev-patho);background:rgba(253,164,175,.08)}
-.block .bl-hdr{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
-.block.b-micro .bl-hdr{color:var(--micro)}
-.block.b-pharma .bl-hdr{color:var(--pharma)}
-.block.b-patho .bl-hdr{color:var(--patho)}
-.block.b-rev-micro .bl-hdr{color:#16a34a}
-.block.b-rev-pharma .bl-hdr{color:#818cf8}
-.block.b-rev-patho .bl-hdr{color:#fb7185}
-.block .bl-items{font-size:.72rem;color:var(--text-dim);line-height:1.5}
-.block .bl-items .ch{margin-bottom:.15rem}
-.block .bl-items .ch .hrs{font-weight:600;color:var(--text)}
-
-/* Modal */
+.block.b-rev-micro{border-color:var(--rev-micro);background:rgba(134,239,172,.06)}
+.block.b-rev-pharma{border-color:var(--rev-pharma);background:rgba(165,180,252,.06)}
+.block.b-rev-patho{border-color:var(--rev-patho);background:rgba(253,164,175,.06)}
+.bl-hdr{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.15rem}
+.block.b-micro .bl-hdr{color:var(--micro)}.block.b-pharma .bl-hdr{color:var(--pharma)}.block.b-patho .bl-hdr{color:var(--patho)}
+.block.b-rev-micro .bl-hdr{color:#16a34a}.block.b-rev-pharma .bl-hdr{color:#818cf8}.block.b-rev-patho .bl-hdr{color:#fb7185}
+.bl-items{font-size:.68rem;color:var(--text-dim);line-height:1.4}
+.bl-items .hrs{font-weight:600;color:var(--text)}
+.legend{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
+.legend-item{display:flex;align-items:center;gap:.2rem;font-size:.64rem;color:var(--text-dim)}
+.legend-dot{width:8px;height:8px;border-radius:3px}
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;max-width:500px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:slideUp .3s}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;margin-bottom:.6rem}
-.modal-actions{display:flex;gap:.4rem;margin-top:.8rem}
-.modal-btn{border:none;padding:.45rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;transition:all .2s}
-.modal-btn.toggle{background:var(--accent-dim);color:var(--accent)}
-.modal-btn.toggle:hover{background:var(--accent);color:#fff}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;max-width:480px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,.12)}
+.modal h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;margin-bottom:.5rem}
+.modal-actions{display:flex;gap:.35rem;margin-top:.7rem}
+.modal-btn{border:none;padding:.38rem .85rem;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.78rem;transition:all .2s}
+.modal-btn.toggle{background:var(--accent-dim);color:var(--accent)}.modal-btn.toggle:hover{background:var(--accent);color:#fff}
 .modal-btn.undo{background:rgba(225,29,72,.1);color:var(--patho)}
 .modal-btn.close{background:rgba(0,0,0,.06);color:var(--text-dim)}
-
-.legend{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
-.legend-item{display:flex;align-items:center;gap:.25rem;font-size:.68rem;color:var(--text-dim)}
-.legend-dot{width:10px;height:10px;border-radius:3px}
-
-.footer-note{font-size:.72rem;color:var(--text-dim);line-height:1.45;margin-top:1rem}
-.footer-note strong{color:var(--text)}
-
-@media(max-width:700px){.sum-grid{grid-template-columns:1fr}.day-blocks{grid-template-columns:1fr}}
+.footer-note{font-size:.7rem;color:var(--text-dim);line-height:1.4;margin-top:.8rem}.footer-note strong{color:var(--text)}
+@media(max-width:700px){.sum-grid,.day-blocks{grid-template-columns:1fr}.overall-ring{flex-direction:column;align-items:flex-start}.tabs{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="container">
 <header>
-  <h1>Replan: Apr 9 – 21</h1>
-  <p>Remaining chapters + Revision of completed content · 102 hours available</p>
+  <h1>Study Tracker</h1>
+  <p>Full syllabus progress + remaining schedule · Apr 12–21</p>
 </header>
-
-<div id="app"></div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modal"></div>
+<div class="tabs">
+  <button class="tab-btn active" data-t="progress" onclick="switchTab('progress')">📊 Progress</button>
+  <button class="tab-btn" data-t="replan" onclick="switchTab('replan')">📅 Remaining Schedule</button>
 </div>
+<div class="tab-content active" id="tab-progress"></div>
+<div class="tab-content" id="tab-replan"></div>
 </div>
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modal"></div></div>
 
 <script>
-// ===== REMAINING NEW CONTENT =====
-const newMicro=[
-  {id:55,n:"Misc Bacterial: Anthrax, Actinomycosis, Nocardiosis",e:"XL",h:5},
-  {id:56,n:"Viral Exanthems: HSV, VZV, Pox, Measles, Rubella",e:"L",h:3},
-  {id:57,n:"Parasitic: Cutaneous Leish, Cysticercosis, Nematodes",e:"M",h:2.25},
-  {id:58,n:"Fungal: Superficial, Subcutaneous, Candidiasis",e:"M",h:2.25},
-  {id:70,n:"Infective Syndromes of CNS",e:"S",h:1.25},
-  {id:71,n:"Bacterial Meningitis",e:"M",h:2.25},
-  {id:72,n:"Tetanus",e:"S",h:1.25},
-  {id:73,n:"Viral Meningitis & Myelitis: Polio, Coxsackie",e:"M",h:2.25},
-  {id:74,n:"Viral Encephalitis and Encephalopathy",e:"L",h:3},
-  {id:75,n:"Parasitic & Fungal Infections of CNS",e:"L",h:3},
-];
-const newPharma=[
-  {id:16,n:"Drugs for Cough and Bronchial Asthma",e:"L",h:3},
-  {id:101,n:"Anterior Pituitary Drugs",e:"S",h:1.25},
-  {id:102,n:"Thyroid and Anti-thyroid Drugs",e:"M",h:2.25},
-  {id:103,n:"Insulin & Oral Hypoglycaemic Agents",e:"XL",h:5},
-  {id:104,n:"Corticosteroids",e:"L",h:3},
-];
-const newPatho=[
-  {id:205,n:"Paediatric Disorders",e:"M",h:2.25},
-  {id:206,n:"GIT Pathology",e:"M",h:2.25},
-  {id:207,n:"Hepatobiliary Pathology",e:"M",h:2.25},
-  {id:208,n:"CVS Pathology",e:"M",h:2.25},
-  {id:209,n:"Respiratory System Pathology",e:"M",h:2.25},
-];
-
-// Completed content for revision
-const revMicro=[
-  "Parasitic CVS (Malaria, Leishmaniasis, Filariasis)",
-  "GI Infections (all 8 chapters: syndromes through Helminthic)",
-  "Hepatobiliary (syndromes, Hepatitis, Parasitic)",
-  "Skin & Soft Tissue (syndromes, Staph, Strep, Gas Gangrene, Leprosy)"
-];
-const revPharma=[
-  "CNS Pharmacology (Anaesthetics through CNS Stimulants — 8 chapters)",
-  "Autacoids (Histamine, 5-HT, PGs, NSAIDs, Antigout — 5 chapters)",
-  "GIT (Peptic Ulcer, Antiemetics, Constipation/Diarrhoea — 3 chapters)"
-];
-const revPatho=[
-  "Immunology, Environment & Nutrition, Infections, Genetics"
-];
-
-const totalNewMicro=newMicro.reduce((s,c)=>s+c.h,0); // 25.75
-const totalNewPharma=newPharma.reduce((s,c)=>s+c.h,0); // 14.5
-const totalNewPatho=newPatho.reduce((s,c)=>s+c.h,0); // 11.25
-
-// ===== SCHEDULE =====
-const schedule=[
-  // Apr 9 - TODAY - 10h
-  {date:'Apr 9',dow:'Wed',hrs:10,isToday:true,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:4,items:[
-      {n:'Misc Bacterial: Anthrax, Actinomycosis (Part 1)',h:4}
-    ]},
-    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3.5,items:[
-      {n:'Drugs for Cough and Bronchial Asthma',h:3},
-      {n:'Anterior Pituitary Drugs (start)',h:0.5}
-    ]},
-    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.5,items:[
-      {n:'Paediatric Disorders',h:2.25},
-      {n:'GIT Pathology (start)',h:0.25}
-    ]},
+// ===== FULL SYLLABUS DATA =====
+const microFull=[
+  {t:"Parasitic CVS",chs:[
+    {n:"Malaria and Babesiosis",e:"M",h:2.25,s:"done"},
+    {n:"Visceral Leishmaniasis & Trypanosomiasis",e:"S",h:1.25,s:"done"},
+    {n:"Lymphatic Filariasis",e:"S",h:1.25,s:"done"},
   ]},
-  // Apr 10 - 6h
-  {date:'Apr 10',dow:'Thu',hrs:6,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3,items:[
-      {n:'Misc Bacterial: Anthrax, Actinomycosis (Part 2 — finish)',h:1},
-      {n:'Viral Exanthems: HSV, VZV, Pox, Measles (start)',h:2}
-    ]},
-    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3,items:[
-      {n:'Anterior Pituitary Drugs (finish)',h:0.75},
-      {n:'Thyroid and Anti-thyroid Drugs',h:2.25}
-    ]},
+  {t:"GI Infections",chs:[
+    {n:"GI Infective Syndromes",e:"S",h:1.25,s:"done"},
+    {n:"Food Poisoning: S. aureus, B. cereus, C. botulinum",e:"S",h:1.25,s:"done"},
+    {n:"GI Enterobacteriaceae: E. coli, Shigella, Salmonella",e:"M",h:2.25,s:"done"},
+    {n:"Cholera, Vibrio and Aeromonas",e:"M",h:2.25,s:"done"},
+    {n:"Misc Bacterial GI: H. pylori, Campylobacter, C. diff",e:"S",h:1.25,s:"done"},
+    {n:"Viral Gastroenteritis: Rotavirus & Others",e:"S",h:1.25,s:"done"},
+    {n:"Intestinal Protozoa: Amoebiasis, Giardiasis, Coccidia",e:"L",h:3,s:"done"},
+    {n:"Intestinal Helminthic Infections",e:"XL",h:5,s:"done"},
   ]},
-  // Apr 11 - 6h
-  {date:'Apr 11',dow:'Fri',hrs:6,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.25,items:[
-      {n:'Viral Exanthems (finish)',h:1},
-      {n:'Parasitic: Cutaneous Leish, Cysticercosis',h:2.25}
-    ]},
-    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.75,items:[
-      {n:'GIT Pathology (finish)',h:2},
-      {n:'Hepatobiliary Pathology (start)',h:0.75}
-    ]},
+  {t:"Hepatobiliary",chs:[
+    {n:"Infective Syndromes of Hepatobiliary System",e:"S",h:1.25,s:"done"},
+    {n:"Hepatitis Viruses, Yellow Fever & Others",e:"L",h:3,s:"done"},
+    {n:"Parasitic: Amoebic Liver Abscess, Hydatid, Trematodes",e:"L",h:3,s:"done"},
   ]},
-  // Apr 12 - 10h
-  {date:'Apr 12',dow:'Sat',hrs:10,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.5,items:[
-      {n:'Fungal: Superficial, Subcutaneous, Candidiasis',h:2.25},
-      {n:'Infective Syndromes of CNS',h:1.25}
-    ]},
-    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:3,items:[
-      {n:'Insulin & OHA (Part 1)',h:3}
-    ]},
-    {sub:'patho',type:'new',label:'Pathology — New',hrs:3.5,items:[
-      {n:'Hepatobiliary Pathology (finish)',h:1.5},
-      {n:'CVS Pathology (start)',h:2}
-    ]},
+  {t:"Skin & Soft Tissue",chs:[
+    {n:"Infective Syndromes of Skin, Soft Tissue & MSK",e:"M",h:2.25,s:"done"},
+    {n:"Staphylococcal Infections",e:"S",h:1.25,s:"done"},
+    {n:"Beta-hemolytic Streptococcal Infections",e:"S",h:1.25,s:"done"},
+    {n:"Gas Gangrene & Nonsporing Infections",e:"L",h:3,s:"done"},
+    {n:"Leprosy (M. leprae)",e:"S",h:1.25,s:"done"},
+    {n:"Misc Bacterial: Anthrax, Actinomycosis, Nocardiosis",e:"XL",h:5,s:"partial",done:4,rem:1},
+    {n:"Viral Exanthems: HSV, VZV, Pox, Measles, Rubella",e:"L",h:3,s:"done"},
+    {n:"Parasitic: Cutaneous Leish, Cysticercosis, Nematodes",e:"M",h:2.25,s:"pending"},
+    {n:"Fungal: Superficial, Subcutaneous, Candidiasis",e:"M",h:2.25,s:"pending"},
   ]},
-  // Apr 13 - 10h
-  {date:'Apr 13',dow:'Sun',hrs:10,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:3.5,items:[
-      {n:'Bacterial Meningitis',h:2.25},
-      {n:'Tetanus',h:1.25}
-    ]},
-    {sub:'pharma',type:'new',label:'Pharmacology — New',hrs:4,items:[
-      {n:'Insulin & OHA (Part 2 — finish)',h:2},
-      {n:'Corticosteroids (start)',h:2}
-    ]},
-    {sub:'patho',type:'new',label:'Pathology — New',hrs:2.5,items:[
-      {n:'CVS Pathology (finish)',h:0.25},
-      {n:'Respiratory System Pathology',h:2.25}
-    ]},
-  ]},
-  // Apr 14 - 10h
-  {date:'Apr 14',dow:'Mon',hrs:10,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New',hrs:5.25,items:[
-      {n:'Viral Meningitis & Myelitis',h:2.25},
-      {n:'Viral Encephalitis and Encephalopathy',h:3}
-    ]},
-    {sub:'pharma',type:'new',label:'Pharmacology — New (finish!)',hrs:1,items:[
-      {n:'Corticosteroids (finish)',h:1}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.75,items:[
-      {n:'Revision: CNS Pharmacology (8 chapters overview)',h:1.75}
-    ]},
-    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:2,items:[
-      {n:'Revision: Immunology, Environ, Infections, Genetics',h:2}
-    ]},
-  ]},
-  // Apr 15 - 10h — ALL NEW CONTENT DONE, HEAVY REVISION STARTS
-  {date:'Apr 15',dow:'Tue',hrs:10,blocks:[
-    {sub:'micro',type:'new',label:'Microbiology — New (finish!)',hrs:3,items:[
-      {n:'Parasitic & Fungal Infections of CNS',h:3}
-    ]},
-    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:2,items:[
-      {n:'Revision: Parasitic CVS (Malaria, Leish, Filariasis)',h:1},
-      {n:'Revision: GI Infections Part 1 (syndromes, food poisoning, Enterobacteriaceae)',h:1}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:3,items:[
-      {n:'Revision: Autacoids (Histamine, 5-HT, PGs, NSAIDs, Antigout)',h:1.5},
-      {n:'Revision: GIT Pharma (PUD, Antiemetics, Constipation)',h:1.5}
-    ]},
-    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:2,items:[
-      {n:'Revision: Paediatric + GIT + Hepatobiliary Pathology',h:2}
-    ]},
-  ]},
-  // Apr 16 - 6h — FULL REVISION
-  {date:'Apr 16',dow:'Wed',hrs:6,blocks:[
-    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
-      {n:'Revision: GI Part 2 (Cholera, Vibrio, Misc, Viral, Protozoa)',h:1.5},
-      {n:'Revision: GI Part 3 (Helminthic Infections — high yield)',h:1.5}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:3,items:[
-      {n:'Revision: CNS — Anaesthetics, Sedatives, Antiepileptics',h:1.5},
-      {n:'Revision: CNS — Parkinsonism, Antipsychotics, Antidepressants',h:1.5}
-    ]},
-  ]},
-  // Apr 17 - 6h
-  {date:'Apr 17',dow:'Thu',hrs:6,blocks:[
-    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
-      {n:'Revision: Hepatobiliary (syndromes, Hepatitis, Parasitic)',h:1.5},
-      {n:'Revision: Skin & Soft Tissue Part 1 (Staph, Strep, Gangrene, Leprosy)',h:1.5}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.5,items:[
-      {n:'Revision: CNS — Opioids, Stimulants',h:1.5}
-    ]},
-    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:1.5,items:[
-      {n:'Revision: CVS + Respiratory Pathology',h:1.5}
-    ]},
-  ]},
-  // Apr 18 - 6h
-  {date:'Apr 18',dow:'Fri',hrs:6,blocks:[
-    {sub:'micro',type:'rev',label:'Microbiology — Revision',hrs:3,items:[
-      {n:'Revision: Skin Part 2 (Misc Bacterial, Viral Exanthems, Parasitic, Fungal)',h:1.5},
-      {n:'Revision: CNS Micro (Meningitis, Tetanus, Encephalitis, Parasitic CNS)',h:1.5}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Revision',hrs:1.5,items:[
-      {n:'Revision: Cough/Asthma, Pituitary, Thyroid',h:1.5}
-    ]},
-    {sub:'patho',type:'rev',label:'Pathology — Revision',hrs:1.5,items:[
-      {n:'Revision: Full Pathology rapid review (all 9 topics)',h:1.5}
-    ]},
-  ]},
-  // Apr 19 - 10h — INTEGRATED REVISION
-  {date:'Apr 19',dow:'Sat',hrs:10,blocks:[
-    {sub:'micro',type:'rev',label:'Microbiology — Grand Revision',hrs:4,items:[
-      {n:'Full Micro rapid review: system-by-system walkthrough',h:2.5},
-      {n:'Weak areas & high-yield topics re-read',h:1.5}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharmacology — Grand Revision',hrs:4,items:[
-      {n:'Full Pharma rapid review: drug classes, MOA, side effects',h:2.5},
-      {n:'Revision: Insulin, OHA, Corticosteroids (newest content)',h:1.5}
-    ]},
-    {sub:'patho',type:'rev',label:'Pathology — Grand Revision',hrs:2,items:[
-      {n:'Full Patho rapid review: all 9 topics concept maps',h:2}
-    ]},
-  ]},
-  // Apr 20 - 6h
-  {date:'Apr 20',dow:'Sun',hrs:6,blocks:[
-    {sub:'micro',type:'rev',label:'Micro — Final Pass',hrs:2,items:[
-      {n:'High-yield tables, differentials, diagrams',h:2}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharma — Final Pass',hrs:2,items:[
-      {n:'Drug comparison tables, dosing, contraindications',h:2}
-    ]},
-    {sub:'patho',type:'rev',label:'Patho — Final Pass',hrs:2,items:[
-      {n:'Key pathology images, buzzwords, differentials',h:2}
-    ]},
-  ]},
-  // Apr 21 - 6h
-  {date:'Apr 21',dow:'Mon',hrs:6,blocks:[
-    {sub:'micro',type:'rev',label:'Micro — Final Sweep',hrs:2,items:[
-      {n:'Quick-fire review: weakest topics + practice Qs',h:2}
-    ]},
-    {sub:'pharma',type:'rev',label:'Pharma — Final Sweep',hrs:2,items:[
-      {n:'Quick-fire review: newest chapters + practice Qs',h:2}
-    ]},
-    {sub:'patho',type:'rev',label:'Patho — Final Sweep',hrs:2,items:[
-      {n:'Quick-fire review: all systems + practice Qs',h:2}
-    ]},
+  {t:"CNS Infections",chs:[
+    {n:"Infective Syndromes of CNS",e:"S",h:1.25,s:"pending"},
+    {n:"Bacterial Meningitis",e:"M",h:2.25,s:"pending"},
+    {n:"Tetanus",e:"S",h:1.25,s:"pending"},
+    {n:"Viral Meningitis & Myelitis: Polio, Coxsackie",e:"M",h:2.25,s:"pending"},
+    {n:"Viral Encephalitis and Encephalopathy",e:"L",h:3,s:"pending"},
+    {n:"Parasitic & Fungal Infections of CNS",e:"L",h:3,s:"pending"},
   ]},
 ];
 
-// ===== STATE =====
-let completed={};
-try{const s=localStorage.getItem('replan1');if(s)completed=JSON.parse(s);}catch(e){}
-function saveState(){try{localStorage.setItem('replan1',JSON.stringify(completed));}catch(e){}}
+const pharmaFull=[
+  {t:"CNS",chs:[
+    {n:"General Anaesthetics",e:"L",h:3,s:"done"},
+    {n:"Sedative-Hypnotics",e:"M",h:2.25,s:"done"},
+    {n:"Antiepileptic Drugs",e:"L",h:3,s:"done"},
+    {n:"Drugs for Parkinsonism & Alzheimer's",e:"M",h:2.25,s:"done"},
+    {n:"Antipsychotic and Antimanic Drugs",e:"L",h:3,s:"done"},
+    {n:"Antidepressant and Antianxiety Drugs",e:"L",h:3,s:"done"},
+    {n:"Opioid Analgesics and Antagonists",e:"L",h:3,s:"done"},
+    {n:"CNS Stimulants & Cognition Enhancers",e:"S",h:1.25,s:"done"},
+  ]},
+  {t:"Autacoids",chs:[
+    {n:"Histamine and Antihistaminics",e:"S",h:1.25,s:"done"},
+    {n:"5-HT, Antagonists & Migraine Therapy",e:"M",h:2.25,s:"done"},
+    {n:"Prostaglandins, Leukotrienes & PAF",e:"S",h:1.25,s:"done"},
+    {n:"NSAIDs and Antipyretic-Analgesics",e:"L",h:3,s:"done"},
+    {n:"Antirheumatoid and Antigout Drugs",e:"S",h:1.25,s:"done"},
+  ]},
+  {t:"GIT",chs:[
+    {n:"Drugs for Peptic Ulcer and GERD",e:"M",h:2.25,s:"done"},
+    {n:"Antiemetic, Prokinetic & Digestant Drugs",e:"M",h:2.25,s:"done"},
+    {n:"Drugs for Constipation and Diarrhoea",e:"L",h:3,s:"done"},
+  ]},
+  {t:"Respiratory",chs:[
+    {n:"Drugs for Cough and Bronchial Asthma",e:"L",h:3,s:"done"},
+  ]},
+  {t:"Endocrine",chs:[
+    {n:"Anterior Pituitary Drugs",e:"S",h:1.25,s:"pending"},
+    {n:"Thyroid and Anti-thyroid Drugs",e:"M",h:2.25,s:"pending"},
+    {n:"Insulin & Oral Hypoglycaemic Agents",e:"XL",h:5,s:"pending"},
+    {n:"Corticosteroids",e:"L",h:3,s:"pending"},
+  ]},
+];
 
-// Gist sync
-let GIST_ID=localStorage.getItem('sp_gist_id')||'';
-let GH_TOKEN=localStorage.getItem('sp_gh_token')||'';
-async function gistSave(){
-  if(!GH_TOKEN)return;
-  try{
-    const body={description:"Study Replan Progress",public:false,files:{"replan.json":{content:JSON.stringify(completed)}}};
-    let url='https://api.github.com/gists',method='POST';
-    if(GIST_ID){url+='/'+GIST_ID;method='PATCH';}
-    const r=await fetch(url,{method,headers:{'Authorization':'token '+GH_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(r.ok){const d=await r.json();if(!GIST_ID){GIST_ID=d.id;localStorage.setItem('sp_gist_id',GIST_ID);}}
-  }catch(e){console.error(e);}
-}
-async function gistLoad(){
-  if(!GH_TOKEN||!GIST_ID)return false;
-  try{
-    const r=await fetch('https://api.github.com/gists/'+GIST_ID,{headers:{'Authorization':'token '+GH_TOKEN}});
-    if(!r.ok)return false;
-    const d=await r.json();
-    const c=d.files['replan.json']?.content;
-    if(c){completed=JSON.parse(c);saveState();return true;}
-  }catch(e){console.error(e);}
-  return false;
+const pathoFull=[
+  {t:"Pathology",chs:[
+    {n:"Immunology",e:"M",h:2.25,s:"done"},
+    {n:"Environment & Nutritional Disorders",e:"M",h:2.25,s:"done"},
+    {n:"Infections",e:"M",h:2.25,s:"done"},
+    {n:"Genetics",e:"M",h:2.25,s:"done"},
+    {n:"Paediatric Disorders",e:"M",h:2.25,s:"pending"},
+    {n:"GIT Pathology",e:"M",h:2.25,s:"done"},
+    {n:"Hepatobiliary Pathology",e:"M",h:2.25,s:"partial",done:0.75,rem:1.5},
+    {n:"CVS Pathology",e:"M",h:2.25,s:"pending"},
+    {n:"Respiratory System Pathology",e:"M",h:2.25,s:"pending"},
+  ]},
+];
+
+function calcSubjectStats(groups){
+  let total=0,done=0,chTotal=0,chDone=0;
+  groups.forEach(g=>g.chs.forEach(c=>{
+    total+=c.h;chTotal++;
+    if(c.s==='done'){done+=c.h;chDone++;}
+    else if(c.s==='partial'){done+=(c.done||0);chDone+=0.5;}
+  }));
+  return{total:Math.round(total*10)/10,done:Math.round(done*10)/10,rem:Math.round((total-done)*10)/10,chTotal,chDone:Math.round(chDone*10)/10,pct:Math.round((done/total)*100)};
 }
 
-// ===== RENDER =====
-function render(){
-  const app=document.getElementById('app');
-  const totalHrs=schedule.reduce((s,d)=>s+d.hrs,0);
-  const doneHrs=schedule.reduce((s,d,i)=>s+(completed[i]?d.hrs:0),0);
-  const doneDays=Object.keys(completed).filter(k=>completed[k]).length;
-  const pct=totalHrs>0?Math.round((doneHrs/totalHrs)*100):0;
+const mSt=calcSubjectStats(microFull);
+const pSt=calcSubjectStats(pharmaFull);
+const tSt=calcSubjectStats(pathoFull);
+const oTotal=mSt.total+pSt.total+tSt.total;
+const oDone=mSt.done+pSt.done+tSt.done;
+const oPct=Math.round((oDone/oTotal)*100);
 
-  // Count new vs revision hours
-  let newH={micro:0,pharma:0,patho:0},revH={micro:0,pharma:0,patho:0};
-  schedule.forEach(d=>{
-    d.blocks.forEach(b=>{
-      if(b.type==='new')(newH[b.sub]||0,newH[b.sub]+=b.hrs);
-      else(revH[b.sub]||0,revH[b.sub]+=b.hrs);
+// ===== PROGRESS TAB =====
+function renderProgress(){
+  const el=document.getElementById('tab-progress');
+  let h=`
+  <div class="overall-ring">
+    <div class="ring-wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(0,0,0,.06)" stroke-width="10"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="url(#grad)" stroke-width="10" stroke-linecap="round"
+          stroke-dasharray="${2*Math.PI*50}" stroke-dashoffset="${2*Math.PI*50*(1-oPct/100)}"/>
+        <defs><linearGradient id="grad"><stop offset="0%" stop-color="var(--micro)"/><stop offset="50%" stop-color="var(--pharma)"/><stop offset="100%" stop-color="var(--patho)"/></linearGradient></defs>
+      </svg>
+      <div class="ring-label"><div class="ring-pct">${oPct}%</div><div class="ring-sub">${oDone}/${oTotal}h</div></div>
+    </div>
+    <div class="ring-details">
+      ${[{l:'Microbiology',s:mSt,c:'var(--micro)'},{l:'Pharmacology',s:pSt,c:'var(--pharma)'},{l:'Pathology',s:tSt,c:'var(--patho)'}].map(x=>`
+        <div class="rd-row">
+          <div class="rd-label" style="color:${x.c}">${x.l}</div>
+          <div class="rd-bar-wrap"><div class="rd-bar" style="width:${x.s.pct}%;background:${x.c}"></div></div>
+          <div class="rd-pct" style="color:${x.c}">${x.s.pct}%</div>
+          <div class="rd-hrs">${x.s.done}/${x.s.total}h</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+
+  const subjects=[
+    {name:'🦠 Microbiology',groups:microFull,st:mSt,color:'var(--micro)'},
+    {name:'💊 Pharmacology',groups:pharmaFull,st:pSt,color:'var(--pharma)'},
+    {name:'🔬 Pathology',groups:pathoFull,st:tSt,color:'var(--patho)'},
+  ];
+
+  subjects.forEach((sub,si)=>{
+    h+=`<div class="subject-section">
+      <div class="subject-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.arrow').style.transform=this.nextElementSibling.classList.contains('open')?'rotate(90deg)':''">
+        <h3 style="color:${sub.color}">${sub.name} <span style="font-size:.75rem;font-weight:400;color:var(--text-dim)">${sub.st.pct}% complete</span></h3>
+        <div style="display:flex;align-items:center;gap:.8rem">
+          <div class="sh-stats"><span>${sub.st.chDone}/<strong>${sub.st.chTotal} ch</strong></span><span>${sub.st.rem}h left</span></div>
+          <span class="arrow">▶</span>
+        </div>
+      </div>
+      <div class="subject-body${si===0?' open':''}">`;
+    sub.groups.forEach(g=>{
+      h+=`<div class="topic-group"><div class="topic-group-label">${g.t}</div>`;
+      g.chs.forEach(c=>{
+        const icon=c.s==='done'?'✓':c.s==='partial'?'◐':'○';
+        const statusNote=c.s==='partial'?` (${c.done}h done, ${c.rem}h left)`:'';
+        h+=`<div class="ch-row ${c.s}">
+          <div class="ch-status ${c.s}">${icon}</div>
+          <div class="ch-name">${c.n}${statusNote}</div>
+          <div class="ch-effort">${c.e}</div>
+          <div class="ch-hrs">${c.h}h</div>
+        </div>`;
+      });
+      h+=`</div>`;
     });
+    h+=`</div></div>`;
   });
 
-  let html=`
-    <div class="summary">
-      <h3>Replan Summary</h3>
-      <div class="sum-grid">
-        <div class="sum-card mc">
-          <h4>🦠 Microbiology</h4>
-          <div class="sc-row"><span>New content</span><span class="scv">25.75h (10 ch)</span></div>
-          <div class="sc-row"><span>Revision</span><span class="scv">~17h</span></div>
-        </div>
-        <div class="sum-card pc">
-          <h4>💊 Pharmacology</h4>
-          <div class="sc-row"><span>New content</span><span class="scv">14.5h (5 ch)</span></div>
-          <div class="sc-row"><span>Revision</span><span class="scv">~19h</span></div>
-        </div>
-        <div class="sum-card tc">
-          <h4>🔬 Pathology</h4>
-          <div class="sc-row"><span>New content</span><span class="scv">11.25h (5 ch)</span></div>
-          <div class="sc-row"><span>Revision</span><span class="scv">~13h</span></div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim)">
-        <span><strong style="color:var(--text)">${doneDays}</strong> / ${schedule.length} days done</span>
-        <span><strong style="color:var(--accent)">${doneHrs}h</strong> / ${totalHrs}h completed</span>
-        <span><strong style="color:var(--text)">${pct}%</strong> progress</span>
-      </div>
-      <div class="progress-wrap" style="margin-top:.5rem"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>
-    </div>
+  el.innerHTML=h;
+}
 
+// ===== REPLAN TAB =====
+const schedule=[
+  {date:'Apr 12',dow:'Sat',hrs:10,phase:1,blocks:[
+    {sub:'micro',type:'new',label:'Micro — New',hrs:3.25,items:[{n:'Misc Bacterial Anthrax (finish)',h:1},{n:'Parasitic: Cutaneous Leish, Cysticercosis',h:2.25}]},
+    {sub:'pharma',type:'new',label:'Pharma — New',hrs:3.5,items:[{n:'Anterior Pituitary Drugs',h:1.25},{n:'Thyroid and Anti-thyroid Drugs',h:2.25}]},
+    {sub:'patho',type:'new',label:'Patho — New',hrs:3.25,items:[{n:'Hepatobiliary Pathology (finish)',h:1.5},{n:'CVS Pathology (start)',h:1.75}]},
+  ]},
+  {date:'Apr 13',dow:'Sun',hrs:10,phase:1,blocks:[
+    {sub:'micro',type:'new',label:'Micro — New',hrs:3.5,items:[{n:'Fungal: Superficial, Subcutaneous, Candidiasis',h:2.25},{n:'Infective Syndromes of CNS',h:1.25}]},
+    {sub:'pharma',type:'new',label:'Pharma — New',hrs:3,items:[{n:'Insulin & OHA (Part 1)',h:3}]},
+    {sub:'patho',type:'new',label:'Patho — New ✓ finish!',hrs:2.75,items:[{n:'CVS Pathology (finish)',h:0.5},{n:'Respiratory System Pathology',h:2.25}]},
+    {sub:'patho',type:'rev',label:'Patho — Revision',hrs:0.75,items:[{n:'Quick review: Immunology + Genetics',h:0.75}]},
+  ]},
+  {date:'Apr 14',dow:'Mon',hrs:10,phase:1,blocks:[
+    {sub:'micro',type:'new',label:'Micro — New',hrs:4.5,items:[{n:'Bacterial Meningitis',h:2.25},{n:'Tetanus',h:1.25},{n:'Viral Meningitis & Myelitis (start)',h:1}]},
+    {sub:'pharma',type:'new',label:'Pharma — New',hrs:3.5,items:[{n:'Insulin & OHA (Part 2 — finish)',h:2},{n:'Corticosteroids (start)',h:1.5}]},
+    {sub:'patho',type:'rev',label:'Patho — Revision',hrs:2,items:[{n:'Review: Environ, Infections, Paediatric, GIT',h:2}]},
+  ]},
+  {date:'Apr 15',dow:'Tue',hrs:10,phase:1,blocks:[
+    {sub:'micro',type:'new',label:'Micro — New',hrs:4.25,items:[{n:'Viral Meningitis (finish)',h:1.25},{n:'Viral Encephalitis and Encephalopathy',h:3}]},
+    {sub:'pharma',type:'new',label:'Pharma — New ✓ finish!',hrs:1.5,items:[{n:'Corticosteroids (finish)',h:1.5}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Revision',hrs:2,items:[{n:'Review: CNS Pharma overview',h:2}]},
+    {sub:'patho',type:'rev',label:'Patho — Revision',hrs:2.25,items:[{n:'Review: Hepatobiliary, CVS, Respiratory',h:2.25}]},
+  ]},
+  {date:'Apr 16',dow:'Wed',hrs:6,phase:2,blocks:[
+    {sub:'micro',type:'new',label:'Micro — New ✓ finish!',hrs:3,items:[{n:'Parasitic & Fungal Infections of CNS',h:3}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Revision',hrs:1.5,items:[{n:'Review: CNS — Parkinsonism, Antipsychotics, Opioids',h:1.5}]},
+    {sub:'micro',type:'rev',label:'Micro — Revision',hrs:1.5,items:[{n:'Review: Parasitic CVS (Malaria, Leish, Filariasis)',h:1.5}]},
+  ]},
+  {date:'Apr 17',dow:'Thu',hrs:6,phase:2,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Revision',hrs:3,items:[{n:'Review: GI Part 1 (syndromes → Enterobacteriaceae)',h:1.5},{n:'Review: GI Part 2 (Cholera → Viral GE)',h:1.5}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Revision',hrs:1.5,items:[{n:'Review: Autacoids (all 5 chapters)',h:1.5}]},
+    {sub:'patho',type:'rev',label:'Patho — Revision',hrs:1.5,items:[{n:'Full Patho rapid review: all 9 topics',h:1.5}]},
+  ]},
+  {date:'Apr 18',dow:'Fri',hrs:6,phase:2,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Revision',hrs:3,items:[{n:'Review: GI Part 3 (Protozoa + Helminthic)',h:1.5},{n:'Review: Hepatobiliary (all 3 chapters)',h:1.5}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Revision',hrs:1.5,items:[{n:'Review: GIT Pharma + Respiratory + Endocrine',h:1.5}]},
+    {sub:'patho',type:'rev',label:'Patho — Revision',hrs:1.5,items:[{n:'Patho weak areas + practice Qs',h:1.5}]},
+  ]},
+  {date:'Apr 19',dow:'Sat',hrs:10,phase:3,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Grand Revision',hrs:4,items:[{n:'Skin & Soft Tissue rapid pass (all 9 ch)',h:2},{n:'CNS Micro rapid pass (all 6 ch)',h:2}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Grand Revision',hrs:4,items:[{n:'Insulin, OHA, Corticosteroids (reinforce)',h:2},{n:'Full Pharma drug tables + MOA review',h:2}]},
+    {sub:'patho',type:'rev',label:'Patho — Grand Revision',hrs:2,items:[{n:'Concept maps + Micro/Pharma integration',h:2}]},
+  ]},
+  {date:'Apr 20',dow:'Sun',hrs:6,phase:3,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Final Pass',hrs:2.5,items:[{n:'High-yield tables, differentials, organisms',h:1.5},{n:'Weakest topics re-read',h:1}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Final Pass',hrs:2,items:[{n:'Drug comparisons, contraindications, dosing',h:2}]},
+    {sub:'patho',type:'rev',label:'Patho — Final Pass',hrs:1.5,items:[{n:'Buzzwords, key images, differentials',h:1.5}]},
+  ]},
+  {date:'Apr 21',dow:'Mon',hrs:6,phase:3,blocks:[
+    {sub:'micro',type:'rev',label:'Micro — Final Sweep',hrs:2,items:[{n:'Quick-fire all systems + practice Qs',h:2}]},
+    {sub:'pharma',type:'rev',label:'Pharma — Final Sweep',hrs:2,items:[{n:'Quick-fire all drug classes + practice Qs',h:2}]},
+    {sub:'patho',type:'rev',label:'Patho — Final Sweep',hrs:2,items:[{n:'Quick-fire all topics + practice Qs',h:2}]},
+  ]},
+];
+
+let dayCompleted={};
+try{const s=localStorage.getItem('replan3');if(s)dayCompleted=JSON.parse(s);}catch(e){}
+function saveDayState(){try{localStorage.setItem('replan3',JSON.stringify(dayCompleted));}catch(e){}}
+
+const phaseInfo={1:{t:'Phase 1: Finish New Content',d:'All remaining chapters'},2:{t:'Phase 2: Deep Revision',d:'Last Micro + systematic review'},3:{t:'Phase 3: Grand Revision',d:'Integrated review + practice Qs'}};
+
+function renderReplan(){
+  const el=document.getElementById('tab-replan');
+  const tH=schedule.reduce((s,d)=>s+d.hrs,0);
+  const dH=schedule.reduce((s,d,i)=>s+(dayCompleted[i]?d.hrs:0),0);
+  const dD=Object.keys(dayCompleted).filter(k=>dayCompleted[k]).length;
+  const today=new Date();const todayStr='Apr '+today.getDate();
+
+  let h=`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim);flex-wrap:wrap;gap:.3rem;box-shadow:0 1px 2px rgba(0,0,0,.03)">
+      <span>New: <strong style="color:var(--text)">36h</strong> (16 ch)</span>
+      <span>Revision: <strong style="color:var(--text)">~44h</strong></span>
+      <span>Done: <strong style="color:var(--accent)">${dD}/${schedule.length} days · ${dH}h</strong></span>
+    </div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--micro)"></div>Micro (new)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--pharma)"></div>Pharma (new)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--patho)"></div>Patho (new)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-micro)"></div>Micro (revision)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-pharma)"></div>Pharma (revision)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-patho)"></div>Patho (revision)</div>
-    </div>
-
-    <div class="day-grid">
-  `;
-
+      <div class="legend-item"><div class="legend-dot" style="background:var(--micro)"></div>Micro new</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pharma)"></div>Pharma new</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--patho)"></div>Patho new</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-micro)"></div>Micro rev</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-pharma)"></div>Pharma rev</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--rev-patho)"></div>Patho rev</div>
+    </div>`;
+  let cp=0;
   schedule.forEach((day,i)=>{
-    const isDone=completed[i];
-    const isToday=day.isToday;
-    html+=`<div class="day-row${isDone?' completed':''}${isToday?' is-today':''}" onclick="toggleDay(${i})">
-      <div class="day-hdr">
-        <div class="dh-left">
-          <span class="day-date">${day.date}</span>
-          <span class="day-dow">${day.dow}${isToday?' · TODAY':''}</span>
-        </div>
-        <span class="day-total">${day.hrs}h</span>
-      </div>
-      <div class="day-blocks">`;
-
+    if(day.phase!==cp){cp=day.phase;const pi=phaseInfo[cp];h+=`<div class="phase-label">${pi.t}<span>${pi.d}</span></div>`;}
+    const isDone=dayCompleted[i];const isT=day.date===todayStr;
+    h+=`<div class="day-row${isDone?' completed':''}${isT?' is-today':''}" onclick="openDayModal(${i})">
+      <div class="day-hdr"><div class="dh-left"><span class="day-date">${day.date}</span><span class="day-dow">${day.dow}${isT?' · TODAY':''}</span></div><span class="day-total">${day.hrs}h</span></div><div class="day-blocks">`;
     day.blocks.forEach(b=>{
       const cls=b.type==='rev'?`b-rev-${b.sub}`:`b-${b.sub}`;
-      html+=`<div class="block ${cls}">
-        <div class="bl-hdr">${b.label} · ${b.hrs}h</div>
-        <div class="bl-items">`;
-      b.items.forEach(it=>{
-        html+=`<div class="ch">${it.n} — <span class="hrs">${it.h}h</span></div>`;
-      });
-      html+=`</div></div>`;
+      h+=`<div class="block ${cls}"><div class="bl-hdr">${b.label} · ${b.hrs}h</div><div class="bl-items">`;
+      b.items.forEach(it=>{h+=`<div>${it.n} — <span class="hrs">${it.h}h</span></div>`;});
+      h+=`</div></div>`;
     });
-
-    html+=`</div></div>`;
+    h+=`</div></div>`;
   });
-
-  html+=`</div>
-    <div class="footer-note">
-      <strong>Strategy:</strong> Apr 9–15: Finish all remaining new chapters (Micro 10 ch, Pharma 5 ch, Patho 5 ch) while starting revision for Pharma and Patho. Apr 15–18: Intensive revision of all completed content, organized by system. Apr 19: Grand integrated revision across all three subjects. Apr 20–21: Final pass with high-yield focus and practice questions. Click any day to mark it complete.
-    </div>
-  `;
-  app.innerHTML=html;
+  h+=`<div class="footer-note"><strong>Phase 1:</strong> Finish all 16 remaining chapters (Patho done Apr 13, Pharma Apr 15, Micro Apr 16). <strong>Phase 2:</strong> Systematic revision by system. <strong>Phase 3:</strong> Grand integrated review + practice Qs.</div>`;
+  el.innerHTML=h;
 }
 
-function toggleDay(i){
-  const ov=document.getElementById('modalOverlay');
-  const day=schedule[i];
-  const isDone=completed[i];
-
-  let body=`<h3>${day.date} ${day.dow} — ${day.hrs}h${day.isToday?' (Today)':''}</h3>`;
-  day.blocks.forEach(b=>{
-    const color=b.sub==='micro'?'var(--micro)':b.sub==='pharma'?'var(--pharma)':'var(--patho)';
-    body+=`<div style="margin:.5rem 0;padding:.5rem .7rem;border-left:3px solid ${color};border-radius:6px;background:rgba(0,0,0,.02)">
-      <div style="font-size:.78rem;font-weight:700;color:${color}">${b.label} · ${b.hrs}h</div>`;
-    b.items.forEach(it=>{
-      body+=`<div style="font-size:.75rem;color:var(--text-dim);padding:.15rem 0">${it.n} — <strong>${it.h}h</strong></div>`;
-    });
-    body+=`</div>`;
+function openDayModal(i){
+  const ov=document.getElementById('modalOverlay');const day=schedule[i];const isDone=dayCompleted[i];
+  let b=`<h3>${day.date} ${day.dow} — ${day.hrs}h</h3>`;
+  day.blocks.forEach(bl=>{
+    const c=bl.sub==='micro'?'var(--micro)':bl.sub==='pharma'?'var(--pharma)':'var(--patho)';
+    b+=`<div style="margin:.35rem 0;padding:.4rem .55rem;border-left:3px solid ${c};border-radius:5px;background:rgba(0,0,0,.02)"><div style="font-size:.73rem;font-weight:700;color:${c}">${bl.label} · ${bl.hrs}h</div>`;
+    bl.items.forEach(it=>{b+=`<div style="font-size:.7rem;color:var(--text-dim);padding:.1rem 0">${it.n} — <strong>${it.h}h</strong></div>`;});
+    b+=`</div>`;
   });
-  body+=`<div class="modal-actions">
-    <button class="modal-btn ${isDone?'undo':'toggle'}" onclick="doToggle(${i})">${isDone?'✕ Mark Incomplete':'✓ Mark Complete'}</button>
-    <button class="modal-btn close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
-  </div>`;
-  document.getElementById('modal').innerHTML=body;
-  ov.classList.add('show');
+  b+=`<div class="modal-actions"><button class="modal-btn ${isDone?'undo':'toggle'}" onclick="toggleDayDone(${i})">${isDone?'✕ Undo':'✓ Done'}</button><button class="modal-btn close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button></div>`;
+  document.getElementById('modal').innerHTML=b;ov.classList.add('show');
 }
-
-function doToggle(i){
-  completed[i]=!completed[i];
-  saveState();gistSave();render();
-  document.getElementById('modalOverlay').classList.remove('show');
-}
-
+function toggleDayDone(i){dayCompleted[i]=!dayCompleted[i];saveDayState();renderReplan();document.getElementById('modalOverlay').classList.remove('show');}
 document.getElementById('modalOverlay').onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('show');};
 
-render();
-(async()=>{if(GH_TOKEN){const ok=await gistLoad();if(ok)render();}})();
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.toggle('active',b.dataset.t===t);});
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+renderProgress();
+renderReplan();
 </script>
 </body>
 </html>
